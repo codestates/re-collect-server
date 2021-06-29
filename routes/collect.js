@@ -1,6 +1,6 @@
-let express = require('express');
-let router = express.Router();
-let { getController, postController, putController, patchController, deleteController } = require('../controllers/collectController');
+const express = require('express');
+const router = express.Router();
+const { getController, postController, putController, patchController, deleteController } = require('../controllers/collectController');
 
 //* GET /collect
 router.get('/', getController);

@@ -1,6 +1,6 @@
-let express = require('express');
-let router = express.Router();
-let { signUpController, logInController, forgotPwdController, resetPwdController, logOutController } = require('../controllers/signController');
+const express = require('express');
+const router = express.Router();
+const { signUpController, logInController, forgotPwdController, resetPwdController, logOutController } = require('../controllers/signController');
 
 
 /* GET home page. */
