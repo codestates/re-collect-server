@@ -8,10 +8,10 @@ const refreshDecrypt = process.env.REFRESH_SECRET;
 
 module.exports = {
   generateAccessToken: (data) => {
-    return jwt.sign( { email: data.email }, accessDecrypt, { expiresIn: '1h' });
+    return jwt.sign( { id: data.id, email: data.email }, accessDecrypt, { expiresIn: '1h' });
   },
   generateRefreshToken: (data) => {
-    return jwt.sign( { email: data.email } , refreshDecrypt, { expiresIn: '14d' });
+    return jwt.sign( { id: data.id, email: data.email } , refreshDecrypt, { expiresIn: '14d' });
   },
   resendAccessToken: (res, accessToken) => {
     res.setHeader('Authorization', `Bearer ${accessToken}`);
