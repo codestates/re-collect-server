@@ -1,6 +1,7 @@
 const { Users, Bookmarks } = require('../models');
 const { verifyToken } = require('../utils/token');
 
+
 module.exports = {
   getController: async(req, res) => {
   const accessTokenData = verifyToken(req);
@@ -12,7 +13,6 @@ module.exports = {
         attributes: [ 'id', 'username', 'email', 'gitRepo', 'company', 'createdAt', 'updatedAt' ],
         where: { email: accessTokenData.email }
     });
-
     const bookmark = await Bookmarks.findAll({
         where: { userId: accessTokenData.id }
     });

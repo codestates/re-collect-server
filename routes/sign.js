@@ -1,13 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { signUpController, logInController, forgotPwdController, resetPwdController, logOutController } = require('../controllers/signController');
+const { signUpController, logInController, forgotPwdController, resetPwdController, logOutController, refreshTokenController } = require('../controllers/signController');
 
-
-/* GET home page. */
+router.get('/refreshtoken', refreshTokenController);
 router.post('/signup', signUpController);
 router.post('/login', logInController);
 router.post('/login/pwd/:id', (req, res)=> {
-  console.log('확인', req.params);
   if(req.params.id === 'forgot'){
     return forgotPwdController(req, res);
   }

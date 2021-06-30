@@ -8,6 +8,8 @@ const cors = require('cors');
 const signRouter = require('./routes/sign');
 const collectRouter = require('./routes/collect');
 const exploreRouter = require('./routes/explore');
+const profileRouter = require('./routes/profile');
+
 
 const app = express();
 
@@ -29,6 +31,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', signRouter);
 app.use('/collect', collectRouter);
 app.use('/explore', exploreRouter);
+app.use('/profile', profileRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

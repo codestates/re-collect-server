@@ -4,9 +4,8 @@ const crypto = require('crypto');
 
 require('dotenv').config();
 
-const { generateAccessToken,generateRefreshToken } = require('../utils/token');
+const { generateAccessToken, generateRefreshToken, verifyToken, checkRefreshToken, resendAccessToken } = require('../utils/token');
 const { isValidPwd, makeRandomPwd } = require('../utils/password');
-const { nextTick } = require('process');
 
 
 module.exports = {
@@ -37,7 +36,7 @@ module.exports = {
       return res.status(200).json({ message: 'sign up successfully' });
     })
     .catch((err) => {
-      res.status(500).json({ message: 'failed' });
+      res.status(501).json({ message: 'failed' });
       console.error(err);
     })
   },
@@ -73,7 +72,7 @@ module.exports = {
     })
     .catch((err) => {
       console.error(err);
-      res.status(500).json({ message: 'failed' });
+      res.status(501).json({ message: 'failed' });
     })
   },
   //* POST /login/pwd/forgot
@@ -154,9 +153,9 @@ module.exports = {
     if(!isValidPwd(req.body.password1)) {
       return res.status(501).json({ message: 'failed' });
     } else {
-      var newSalt = crypto.randomBytes(64).toString('hex');
-      var newPassword = crypto.pbkdf2Sync(req.body.password1, newSalt, 10000, 64, 'sha512').toString('base64');
-      var paramEmail = req.params.id.split('=')[1];
+      let newSalt = crypto.randomBytes(64).toString('hex');
+      let newPassword = crypto.pbkdf2Sync(req.body.password1, newSalt, 10000, 64, 'sha512').toString('base64');
+      let paramEmail = req.params.id.split('=')[1];
       await Users.update({
         pwd: newPassword,
         salt: newSalt
@@ -174,8 +173,30 @@ module.exports = {
   },
 
   //* GET /logout
-  logOutController: async(req, res) => {
+  logOutController: (req, res) => {
+    const accessTokenData = verifyToken(req);
+    if(!accessTokenData) {
+      return res.status(401).json({ message: 'invalid access token' });
+    }
+    req.setHeader('authorization', '');
     req.cookie('refreshToken', '');
-
+    return res.status(205).json({ message: 'logout successfully' });
   },
+  refreshTokenController: async(req, res) => {
+    const refreshTokenData = checkRefreshToken(req.cookies.refreshToken);
+    if(!refreshTokenData) {
+      return res.status(401).send('invalid refresh token');
+    } else {
+      await Users.findByPk(refreshTokenData.id)
+      .then((result) => {
+        const accessToken = generateAccessToken(result.dataValues);
+        return resendAccessToken(res, accessToken);
+      })
+      .catch((err) => {
+        return res.status(501).send({
+          message: 'Failed To Create'
+        });
+      })
+    }
+  }
 }

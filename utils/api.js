@@ -1,3 +1,7 @@
+
+const RateLimit = require('express-rate-limit');
+
+
 module.exports = {
   apiLimiter: new RateLimit({
   windowMs: 60 * 1000, //1분간
