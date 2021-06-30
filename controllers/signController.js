@@ -4,9 +4,8 @@ const crypto = require('crypto');
 
 require('dotenv').config();
 
-const { generateAccessToken,generateRefreshToken } = require('../utils/token');
+const { generateAccessToken, generateRefreshToken, verifyToken, checkRefreshToken, resendAccessToken } = require('../utils/token');
 const { isValidPwd, makeRandomPwd } = require('../utils/password');
-const { nextTick } = require('process');
 
 
 module.exports = {
@@ -174,8 +173,30 @@ module.exports = {
   },
 
   //* GET /logout
-  logOutController: async(req, res) => {
+  logOutController: (req, res) => {
+    const accessTokenData = verifyToken(req);
+    if(!accessTokenData) {
+      return res.status(401).json({ message: 'invalid access token' });
+    }
+    req.setHeader('authorization', '');
     req.cookie('refreshToken', '');
-
+    return res.status(205).json({ message: 'logout successfully' });
   },
+  refreshTokenController: async(req, res) => {
+    const refreshTokenData = checkRefreshToken(req.cookies.refreshToken);
+    if(!refreshTokenData) {
+      return res.status(401).send('invalid refresh token');
+    } else {
+      await Users.findByPk(refreshTokenData.id)
+      .then((result) => {
+        const accessToken = generateAccessToken(result.dataValues);
+        return resendAccessToken(res, accessToken);
+      })
+      .catch((err) => {
+        return res.status(501).send({
+          message: 'Failed To Create'
+        });
+      })
+    }
+  }
 }
