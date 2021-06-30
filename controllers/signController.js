@@ -37,7 +37,7 @@ module.exports = {
       return res.status(200).json({ message: 'sign up successfully' });
     })
     .catch((err) => {
-      res.status(500).json({ message: 'failed' });
+      res.status(501).json({ message: 'failed' });
       console.error(err);
     })
   },
@@ -73,7 +73,7 @@ module.exports = {
     })
     .catch((err) => {
       console.error(err);
-      res.status(500).json({ message: 'failed' });
+      res.status(501).json({ message: 'failed' });
     })
   },
   //* POST /login/pwd/forgot
@@ -154,9 +154,9 @@ module.exports = {
     if(!isValidPwd(req.body.password1)) {
       return res.status(501).json({ message: 'failed' });
     } else {
-      var newSalt = crypto.randomBytes(64).toString('hex');
-      var newPassword = crypto.pbkdf2Sync(req.body.password1, newSalt, 10000, 64, 'sha512').toString('base64');
-      var paramEmail = req.params.id.split('=')[1];
+      let newSalt = crypto.randomBytes(64).toString('hex');
+      let newPassword = crypto.pbkdf2Sync(req.body.password1, newSalt, 10000, 64, 'sha512').toString('base64');
+      let paramEmail = req.params.id.split('=')[1];
       await Users.update({
         pwd: newPassword,
         salt: newSalt

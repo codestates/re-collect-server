@@ -16,7 +16,7 @@ module.exports = {
       return res.status(200).json({ users, message: 'welcome to explore' });
     })
     .catch((err) => {
-      return res.status(500).json({ message: 'failed' });
+      return res.status(501).json({ message: 'failed' });
     })
   }
 }
