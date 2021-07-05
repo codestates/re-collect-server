@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "nodemon server.js",
+    "dev": "nodemon ./bin/server.js",
     "start": "NODE_ENV=production pm2 start server.js -i +2",
     "test": "NODE_ENV=test jest 'spec/spec.js' --detectOpenHandles"
   },
