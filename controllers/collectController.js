@@ -18,8 +18,10 @@ module.exports = {
       });
       const category = await Bookmarks.findAll({
         attributes: ['category'],
-        distinct: true,
+        group: ['category'],
         where: { userId: accessTokenData.id }
+      }).then((result) => {
+        return result.map((el) => el.dataValues.category);
       });
       if(user && bookmark && category) {
         return res.status(200).json({ user, bookmark, category, message: 'welcome to collect' });

@@ -1,6 +1,6 @@
 const http = require('http');
 const app = require('../app');
-const { sequelize } = require('../models').sequelize;
+const { sequelize } = require('../models');
 
 sequelize.sync({ alter: false })
   .then(() => {
