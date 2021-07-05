@@ -14,18 +14,11 @@ const app = express();
 const { sequelize }  = require('./models');
 
 dotenv.config();
-sequelize.sync({ alter: true })
-  .then(() => {
-	console.log('데이터베이스 연결 성공.');
-  })
-  .catch((error) => {
-      console.error(error);
-});
 
-const redisClient = redis.createClient({
-  url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
-  password: process.env.REDIS_PASSWORD,
-});
+// const redisClient = redis.createClient({
+//   url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
+//   password: process.env.REDIS_PASSWORD,
+// });
 
 const signRouter = require('./routes/sign');
 const collectRouter = require('./routes/collect');
@@ -34,7 +27,7 @@ const profileRouter = require('./routes/profile');
 
 
 dotenv.config();
-const PORT = process.env.PORT || 3000;
+
 
 //* session 설정
 const sessionOption = {
@@ -45,7 +38,7 @@ const sessionOption = {
     httpOnly: true,
     secure: false,
   },
-  store: new RedisStore({ client: redisClient }),
+  //store: new RedisStore({ client: redisClient }),
 };
 
 if( process.env.NODE_ENV === 'production' ) {
@@ -58,6 +51,10 @@ if( process.env.NODE_ENV === 'production' ) {
   sessionOption.proxy = true;
   sessionOption.cookie.secure = true;
 } 
+
+if( process.env.NODE_ENV === 'test' ) {
+  sessionOption.store = '';
+}
 
 app.use(cors({
   origin: true,
@@ -83,10 +80,6 @@ process.on('uncaughtException', function (err) {
 app.use(function(err, req, res, next) {
   console.error(err.message);
   res.status(500).send({ message: 'failed', type: 'internal' });
-});
-
-http.createServer(app).listen(PORT, () => {
-  console.log(`서버가 ${PORT}에서 실행 중입니다.`);
 });
 
 module.exports = app;

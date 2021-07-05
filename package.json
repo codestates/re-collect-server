@@ -3,8 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "nodemon app.js",
-    "start": "NODE_ENV=production pm2 start app.js -i +2"
+    "dev": "nodemon server.js",
+    "start": "NODE_ENV=production pm2 start server.js -i +2",
+    "test": "NODE_ENV=test jest 'spec/spec.js' --detectOpenHandles"
   },
   "dependencies": {
     "connect-redis": "^6.0.0",
@@ -28,6 +29,7 @@
   },
   "devDependencies": {
     "jest": "^27.0.6",
-    "nodemon": "^2.0.9"
+    "nodemon": "^2.0.9",
+    "supertest": "^6.1.3"
   }
 }

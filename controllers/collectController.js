@@ -3,24 +3,33 @@ const { verifyToken } = require('../utils/token');
 
 
 module.exports = {
-  getController: async(req, res) => {
+  getController: async(req, res, next) => {
   const accessTokenData = verifyToken(req);
-  console.log('토큰 데이터 확인', accessTokenData);
   if(!accessTokenData) {
     return res.status(401).json({ message: 'invalid access token'});
   } else {
-    const user = await Users.findAll({
-        attributes: [ 'id', 'username', 'email', 'gitRepo', 'company', 'createdAt', 'updatedAt' ],
-        where: { email: accessTokenData.email }
-    });
-    const bookmark = await Bookmarks.findAll({
+    try {
+      const user = await Users.findAll({
+      attributes: [ 'id', 'username', 'email', 'gitRepo', 'company', 'createdAt', 'updatedAt' ],
+      where: { email: accessTokenData.email }
+      });
+      const bookmark = await Bookmarks.findAll({
+      where: { userId: accessTokenData.id }
+      });
+      const category = await Bookmarks.findAll({
+        attributes: ['category'],
+        distinct: true,
         where: { userId: accessTokenData.id }
-    });
-    try{
-      return res.status(200).json({ user, bookmark, message: 'welcome to collect' });
-    } catch {
-      return res.status(500).json({ message: 'failed' });
-    }
+      });
+      if(user && bookmark && category) {
+        return res.status(200).json({ user, bookmark, category, message: 'welcome to collect' });
+      } else {
+        return res.status(500).json({ message: 'failed' });
+      }
+    } catch(error) {
+      console.error(error);
+      next(error);
+      }
     }
   },
   postController: async(req, res) => {
