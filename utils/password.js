@@ -16,7 +16,6 @@ module.exports = {
   for(let i =0; i< len; i++ ) {
     result += charset[Math.floor(Math.random()*charset.length)];
   }
-  console.log('임시 비밀번호', result);
   return result;
   }
 }

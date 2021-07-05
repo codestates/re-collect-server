@@ -1,6 +1,5 @@
 require("dotenv").config();
 
-const RateLimit = require('express-rate-limit');
 const jwt = require('jsonwebtoken');
 const accessDecrypt = process.env.ACCESS_SECRET;
 const refreshDecrypt = process.env.REFRESH_SECRET;

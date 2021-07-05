@@ -3,27 +3,33 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www"
+    "dev": "nodemon server.js",
+    "start": "NODE_ENV=production pm2 start server.js -i +2",
+    "test": "NODE_ENV=test jest 'spec/spec.js' --detectOpenHandles"
   },
   "dependencies": {
+    "connect-redis": "^6.0.0",
     "cookie-parser": "~1.4.4",
-    "debug": "~2.6.9",
-    "express": "~4.16.1",
-    "http-errors": "~1.6.3",
-    "morgan": "~1.9.1",
-    "pug": "2.0.0-beta11"
-  },
-  "devDependencies": {
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "dotenv": "^10.0.0",
-    "express-rate-limit": "^5.2.6",
+    "express": "~4.16.1",
+    "express-session": "^1.17.2",
+    "helmet": "^4.6.0",
+    "hpp": "^0.2.3",
     "jsonwebtoken": "^8.5.1",
+    "morgan": "~1.9.1",
     "mysql2": "^2.2.5",
     "nodemailer": "^6.6.2",
-    "nodemon": "^2.0.7",
+    "pm2": "^5.1.0",
+    "redis": "^3.1.2",
     "sequelize": "^6.6.4",
     "sequelize-auto": "^0.8.3",
     "sequelize-cli": "^6.2.0"
+  },
+  "devDependencies": {
+    "jest": "^27.0.6",
+    "nodemon": "^2.0.9",
+    "supertest": "^6.1.3"
   }
 }
