@@ -1,9 +1,31 @@
-const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
+const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
-const logger = require('morgan');
+const morgan = require('morgan');
 const cors = require('cors');
+const session = require('express-session');
+const helmet = require('helmet');
+const hpp =require('hpp');
+const http = require('http');
+const redis = require('redis');
+const RedisStore = require('connect-redis')(session);
+const app = express();
+const { sequelize }  = require('./models');
+
+dotenv.config();
+sequelize.sync({ alter: true })
+  .then(() => {
+	console.log('데이터베이스 연결 성공.');
+  })
+  .catch((error) => {
+      console.error(error);
+});
+
+const redisClient = redis.createClient({
+  url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
+  password: process.env.REDIS_PASSWORD,
+});
 
 const signRouter = require('./routes/sign');
 const collectRouter = require('./routes/collect');
@@ -11,43 +33,60 @@ const exploreRouter = require('./routes/explore');
 const profileRouter = require('./routes/profile');
 
 
-const app = express();
+dotenv.config();
+const PORT = process.env.PORT || 3000;
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
+//* session 설정
+const sessionOption = {
+  resave: false,
+  saveUninitialized: false,
+  secret: process.env.REFRESH_SECRET,
+  cookie: {
+    httpOnly: true,
+    secure: false,
+  },
+  store: new RedisStore({ client: redisClient }),
+};
+
+if( process.env.NODE_ENV === 'production' ) {
+  console.log('배포환경 입니다.');
+  app.enable('trust proxy');
+  app.use(morgan('combined'));
+  app.use(helmet({ contentSecurityPolicy: false }));
+  app.use(hpp());
+  app.disable("x-powered-by");
+  sessionOption.proxy = true;
+  sessionOption.cookie.secure = true;
+} 
 
 app.use(cors({
   origin: true,
   credentials: true
 }));
-app.use(logger('dev'));
-//app.use(logger('combined')) 배포 시에 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true })); //form data submit할때 form parsing, true면 qs false면 queryString
+app.use(express.urlencoded({ extended: true })); 
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(morgan('dev'));
+app.use(session(sessionOption));
 
 app.use('/', signRouter);
 app.use('/collect', collectRouter);
 app.use('/explore', exploreRouter);
 app.use('/profile', profileRouter);
 
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
+	//* 예상치 못한 예외 처리
+process.on('uncaughtException', function (err) {
+	console.log('uncaughtException 발생 : ' + err);
 });
 
-// error handler
+//* 에러 처리 미들웨어 
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+  console.error(err.message);
+  res.status(500).send({ message: 'failed', type: 'internal' });
+});
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+http.createServer(app).listen(PORT, () => {
+  console.log(`서버가 ${PORT}에서 실행 중입니다.`);
 });
 
 module.exports = app;

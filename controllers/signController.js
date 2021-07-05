@@ -60,7 +60,6 @@ module.exports = {
         res.status(401).json({ message: 'login failed' });
       } else {
         // 입력한 비밀번호가 맞은 경우 
-        console.log('확인')
         delete result.dataValues.pwd;
         let accessToken = generateAccessToken(result.dataValues);
         let refreshToken = generateRefreshToken(result.dataValues);
@@ -115,7 +114,7 @@ module.exports = {
       <hr />
       <h3 style="color: crimson;">링크를 누르면 임시 비밀번호를 입력하여, 비밀번호를 새롭게 변경하실 수 있습니다.</h3>
       <br />
-      <a href=http://localhost:80/login/pwd/reset?email=${req.body.email}> 새로운 비밀번호 변경</a>
+      <a href=https://recollect.today/login/pwd/reset?email=${req.body.email}> 새로운 비밀번호 변경</a>
       `
     }
     await Users.update({

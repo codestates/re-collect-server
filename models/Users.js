@@ -16,7 +16,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     pwd: {
-      type: DataTypes.BLOB,
+      type: DataTypes.TEXT,
       allowNull: true
     },
     salt: {

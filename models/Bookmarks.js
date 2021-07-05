@@ -28,9 +28,9 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     importance: {
-      type: DataTypes.BOOLEAN,
+      type: DataTypes.TINYINT,
       allowNull: true,
-      defaultValue: false
+      defaultValue: 0
     },
     color: {
       type: DataTypes.TEXT,
