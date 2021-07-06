@@ -1,5 +1,4 @@
 const express = require('express');
-const path = require('path');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
@@ -7,27 +6,24 @@ const cors = require('cors');
 const session = require('express-session');
 const helmet = require('helmet');
 const hpp =require('hpp');
-const http = require('http');
 const redis = require('redis');
 const RedisStore = require('connect-redis')(session);
 const app = express();
-const { sequelize }  = require('./models');
+
 
 dotenv.config();
 
-// const redisClient = redis.createClient({
-//   url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
-//   password: process.env.REDIS_PASSWORD,
-// });
+const redisClient = redis.createClient({
+  url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
+  password: process.env.REDIS_PASSWORD,
+});
 
 const signRouter = require('./routes/sign');
 const collectRouter = require('./routes/collect');
 const exploreRouter = require('./routes/explore');
 const profileRouter = require('./routes/profile');
 
-
 dotenv.config();
-
 
 //* session 설정
 const sessionOption = {
@@ -38,7 +34,7 @@ const sessionOption = {
     httpOnly: true,
     secure: false,
   },
-  //store: new RedisStore({ client: redisClient }),
+  store: new RedisStore({ client: redisClient }),
 };
 
 if( process.env.NODE_ENV === 'production' ) {
@@ -51,10 +47,6 @@ if( process.env.NODE_ENV === 'production' ) {
   sessionOption.proxy = true;
   sessionOption.cookie.secure = true;
 } 
-
-if( process.env.NODE_ENV === 'test' ) {
-  sessionOption.store = '';
-}
 
 app.use(cors({
   origin: true,
