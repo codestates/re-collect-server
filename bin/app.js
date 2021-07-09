@@ -16,3 +16,4 @@ http.createServer(app).listen(PORT, () => {
   console.log(`서버가 ${PORT}에서 실행 중입니다.`)
 });
 
+module.export = app;

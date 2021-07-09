@@ -43,6 +43,12 @@ const sessionOption = {
 
 if( process.env.NODE_ENV === 'production' ) {
   console.log('배포환경 입니다.');
+  app.use(cors({
+  origin: true,
+  credentials: true,
+  methods: ['GET','HEAD','PUT','PATCH','POST','DELETE','OPTIONS'],
+  exposeHeaders: ['*','Authorization']
+  }));
   app.enable('trust proxy');
   app.use(morgan('combined'));
   app.use(helmet({ contentSecurityPolicy: false }));
@@ -58,7 +64,8 @@ if( process.env.NODE_ENV === 'test' ) {
 
 app.use(cors({
   origin: true,
-  credentials: true
+  credentials: true,
+  exposeHeaders: ['*','Authorization']
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); 

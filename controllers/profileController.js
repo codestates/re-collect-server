@@ -6,7 +6,8 @@ const crypto = require('crypto');
 module.exports = {
   getProfileController: async(req, res) => {
     const accessTokenData = verifyToken(req);
-    if(!accessTokenData) {
+   console.log('엑세스토큰을 확인', accessTokenData);
+ if(!accessTokenData) {
       return res.status(401).json({ message: 'invalid access token'});
     } else {
       const user = await Users.findOne({
@@ -51,7 +52,8 @@ module.exports = {
   },
   updateUsernameController: async(req, res) => {
     const accessTokenData = verifyToken(req);
-    if(!accessTokenData) {
+    console.log(accessTokenData.email);
+ if(!accessTokenData) {
       return res.status(401).json({ message: 'invalid access token' });
     } else {
       await Users.update({
