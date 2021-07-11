@@ -6,6 +6,7 @@ const crypto = require('crypto');
 module.exports = {
   getProfileController: async(req, res) => {
     const accessTokenData = verifyToken(req);
+    console.log('엑세스토큰을 확인', accessTokenData);
     if(!accessTokenData) {
       return res.status(401).json({ message: 'invalid access token'});
     } else {
@@ -60,7 +61,7 @@ module.exports = {
         where: { email: accessTokenData.email }
       })
       .then((result) => {
-        return res.status(200).json({ message: 'edited profile successfully' })
+        return res.status(200).json({ message: 'edited profile successfully' });
       })
       .catch((err) => {
         return res.status(501).json({ message: 'failed' });

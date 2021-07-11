@@ -6,7 +6,7 @@ module.exports = {
     await Users.findAll({
       attributes: [ 'id', 'username', 'email', 'gitRepo', 'company', 'createdAt', 'updatedAt' ],
       order: [sequelize.fn('RAND')],
-      limit: 4
+      limit:10
     })
     .then((result) => {
       console.log(result);

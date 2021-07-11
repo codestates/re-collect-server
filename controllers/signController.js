@@ -65,8 +65,8 @@ module.exports = {
         let refreshToken = generateRefreshToken(result.dataValues);
         //accessToken과 requestToken을 생성 후에 쿠키와 헤더에 담아 보낸다 
         res.cookie('refreshToken', refreshToken );
-        res.setHeader('authorization', accessToken);
-        return res.status(200).json({ message: 'login successfully' });
+        res.setHeader('Authorization',`Bearer ${accessToken}`);
+        return res.status(200).json({ message: 'login successfully', accessToken});
       }
     })
     .catch((err) => {
