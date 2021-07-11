@@ -63,8 +63,15 @@ module.exports = {
         delete result.dataValues.pwd;
         let accessToken = generateAccessToken(result.dataValues);
         let refreshToken = generateRefreshToken(result.dataValues);
+	const cookie= {
+		 httpOnly: true,
+ 		 domain:'recollect.today',
+    		 maxAge: 24 * 6 * 60 * 10000,
+    		 secure: true,
+ 		 sameSite: 'none'
+ 	};
         //accessToken과 requestToken을 생성 후에 쿠키와 헤더에 담아 보낸다 
-        res.cookie('refreshToken', refreshToken );
+        res.cookie('refreshToken', refreshToken, cookie);
         res.setHeader('Authorization',`Bearer ${accessToken}`);
         return res.status(200).json({ message: 'login successfully', accessToken});
       }
@@ -114,7 +121,7 @@ module.exports = {
       <hr />
       <h3 style="color: crimson;">링크를 누르면 임시 비밀번호를 입력하여, 비밀번호를 새롭게 변경하실 수 있습니다.</h3>
       <br />
-      <a href=https://recollect.today/login/pwd/reset?email=${req.body.email}> 새로운 비밀번호 변경</a>
+      <a href=http://localhost:3000/login/pwd/reset?email=${req.body.email}> 새로운 비밀번호 변경</a>
       `
     }
     await Users.update({
@@ -138,7 +145,8 @@ module.exports = {
 
   //* POST /login/pwd/reset&email=
   resetPwdController: async(req, res) => {
-    if(req.body.tempPwd !== undefined ) {
+   console.log('바디내용 확인', req.body);
+   if(req.body.tempPwd !== undefined ) {
       await Users.findOne({
         where: { pwd: req.body.tempPwd }
       })

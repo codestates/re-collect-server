@@ -33,6 +33,7 @@ const sessionOption = {
   cookie: {
     httpOnly: true,
     secure: false,
+    maxAge: 24 * 6 * 60 * 10000,
   },
   store: new RedisStore({ client: redisClient }),
 };
@@ -52,7 +53,7 @@ if( process.env.NODE_ENV === 'production' ) {
   app.disable("x-powered-by");
   sessionOption.proxy = true;
   sessionOption.cookie.secure = true;
-} 
+}
 
 app.use(cors({
   origin: true,
