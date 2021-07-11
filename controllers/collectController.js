@@ -100,7 +100,9 @@ module.exports = {
     }
   },
   deleteController: async(req, res) => {
+    console.log('엑세스 토큰을 확인',req.headers);
     const accessTokenData = verifyToken(req);
+    console.log('테스트 결과', accessTokenData);
     if(!accessTokenData) {
       return res.status(401).json({ message: 'invalid access token' });
     }
