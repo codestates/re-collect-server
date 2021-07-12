@@ -8,19 +8,18 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Bookmark.belongsTo(models.Category, {
         onDelete: 'CASCADE',
-        onUpdate: 'CASCADE',
-        foreignKey: 'listId',
+        foreignKey: 'categoryId',
       });
       Bookmark.belongsTo(models.User, {
         onDelete: 'CASCADE',
-        onUpdate: 'CASCADE',
         foreignKey: 'userId'
       });
     }
   };
   Bookmark.init({
     userId: DataTypes.INTEGER,
-    listId: DataTypes.INTEGER,
+    categoryId: DataTypes.INTEGER,
+    position: DataTypes.INTEGER,
     text: DataTypes.TEXT,
     url: DataTypes.STRING,
     importance: DataTypes.TINYINT,

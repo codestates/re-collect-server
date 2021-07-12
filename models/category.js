@@ -7,9 +7,9 @@ module.exports = (sequelize, DataTypes) => {
 
     static associate(models) {
       Category.hasMany(models.Bookmark, {
-        foreignKey: 'listId',
+        foreignKey: 'categoryId',
       });
-      list.belongsTo(models.User, {
+      Category.belongsTo(models.User, {
         onDelete: 'CASCADE',
         foreignKey: 'userId'
       });

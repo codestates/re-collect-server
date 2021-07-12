@@ -63,13 +63,13 @@ module.exports = {
         delete result.dataValues.pwd;
         let accessToken = generateAccessToken(result.dataValues);
         let refreshToken = generateRefreshToken(result.dataValues);
-	const cookie= {
-		 httpOnly: true,
- 		 domain:'recollect.today',
-    		 maxAge: 24 * 6 * 60 * 10000,
-    		 secure: true,
- 		 sameSite: 'none'
- 	};
+        const cookie= {
+          httpOnly: true,
+          domain:'recollect.today',
+              maxAge: 24 * 6 * 60 * 10000,
+              secure: true,
+          sameSite: 'none'
+        };
         //accessToken과 requestToken을 생성 후에 쿠키와 헤더에 담아 보낸다 
         res.cookie('refreshToken', refreshToken, cookie);
         res.setHeader('Authorization',`Bearer ${accessToken}`);
@@ -183,6 +183,7 @@ module.exports = {
   logOutController: (req, res) => {
     const accessTokenData = verifyToken(req);
     if(!accessTokenData) {
+      req.cookie('refreshToken', '');
       return res.status(401).json({ message: 'invalid access token' });
     }
     req.setHeader('authorization', '');

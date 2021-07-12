@@ -14,9 +14,7 @@ app.use('/bookmark', require('./bookmark'));
 app.use('/bookmarks', require('./bookmark'));
 
 app.use('/auth', require('./auth'));
-app.use('/login', require('./sign'));
-app.use('/logout', require('./sign'));
-app.use('/signup', require('./sign'));
+
 
 
 module.exports = app;

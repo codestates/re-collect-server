@@ -10,7 +10,7 @@ const redis = require('redis');
 const RedisStore = require('connect-redis')(session);
 const app = express();
 const routes = require('./routes/index');
-
+const signctrl = require('./controller/signCtrl');
 
 dotenv.config();
 
@@ -18,7 +18,6 @@ const redisClient = redis.createClient({
   url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
   password: process.env.REDIS_PASSWORD,
 });
-
 
 dotenv.config();
 
@@ -64,6 +63,9 @@ app.use(morgan('dev'));
 app.use(session(sessionOption));
 
 app.use('/',routes);
+app.get('/logout', signctrl.logout);
+app.post('/login', signctrl.login);
+app.post('/signup', signctrl.signup);
 
 	//* 예상치 못한 예외 처리
 process.on('uncaughtException', function (err) {
@@ -72,8 +74,8 @@ process.on('uncaughtException', function (err) {
 
 //* 에러 처리 미들웨어 
 app.use(function(err, req, res, next) {
-  console.error(err.message);
-  res.status(500).send({ message: 'failed', type: 'internal' });
+  console.error('--------',err.message,'---------');
+  res.status(500).send({ message: 'failed'});
 });
 
 module.exports = app;

@@ -15,18 +15,19 @@ module.exports = {
           model: 'Users',
           key: 'id',
         },
-        onUpdate: 'cascade',
         onDelete: 'cascade',
       },
-      listId: {
+      categoryId: {
         type: Sequelize.INTEGER,
-        field: 'listId',
+        field: 'categoryId',
         references: {
-          model: 'Bookmarks',
+          model: 'Categories',
           key: 'id',
         },
-        onUpdate: 'cascade',
         onDelete: 'cascade',
+      },
+      position: {
+        type: Sequelize.INTEGER,
       },
       text: {
         type: Sequelize.TEXT
