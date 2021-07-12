@@ -1,24 +1,28 @@
+"use strict";
+
 require("dotenv").config();
 
 const jwt = require('jsonwebtoken');
 const accessDecrypt = process.env.ACCESS_SECRET;
 const refreshDecrypt = process.env.REFRESH_SECRET;
 
-
-module.exports = {
-  generateAccessToken: (data) => {
+class TokenMiddleware {
+  static generateAccessToken(data) {
     return jwt.sign( { id: data.id, email: data.email }, accessDecrypt, { expiresIn: '1h' });
-  },
-  generateRefreshToken: (data) => {
+  }
+
+  static generateRefreshToken(data) {
     return jwt.sign( { id: data.id, email: data.email } , refreshDecrypt, { expiresIn: '14d' });
-  },
-  resendAccessToken: (res, accessToken) => {
+  }
+
+  static resendAccessToken(res, accessToken) {
     res.setHeader('Authorization', `Bearer ${accessToken}`);
     res.status(200).send({
       message: 'ok'
     });
-  },
-  verifyToken: (req) => {
+  }
+
+  static verifyToken(req) {
     const authorization = req.headers.authorization;
     if (!authorization) {
       return null;
@@ -29,13 +33,15 @@ module.exports = {
     } catch {
       return null;
     }
-  },
-  checkRefreshToken: (refreshToken) => {
+  }
+
+  static checkRefreshToken(refreshToken) {
     try {
       return jwt.verify(refreshToken, refreshDecrypt);
     } catch {
       return null;
     }
-  },
-};
+  }
+}
 
+module.exports = TokenMiddleware;
