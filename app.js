@@ -9,6 +9,7 @@ const hpp =require('hpp');
 const redis = require('redis');
 const RedisStore = require('connect-redis')(session);
 const app = express();
+const routes = require('./routes/index');
 
 
 dotenv.config();
@@ -18,10 +19,6 @@ const redisClient = redis.createClient({
   password: process.env.REDIS_PASSWORD,
 });
 
-const signRouter = require('./routes/sign');
-const collectRouter = require('./routes/collect');
-const exploreRouter = require('./routes/explore');
-const profileRouter = require('./routes/profile');
 
 dotenv.config();
 
@@ -66,10 +63,7 @@ app.use(cookieParser());
 app.use(morgan('dev'));
 app.use(session(sessionOption));
 
-app.use('/', signRouter);
-app.use('/collect', collectRouter);
-app.use('/explore', exploreRouter);
-app.use('/profile', profileRouter);
+app.use('/',routes);
 
 	//* 예상치 못한 예외 처리
 process.on('uncaughtException', function (err) {
