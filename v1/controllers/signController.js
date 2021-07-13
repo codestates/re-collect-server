@@ -145,8 +145,8 @@ module.exports = {
 
   //* POST /login/pwd/reset&email=
   resetPwdController: async(req, res) => {
-   console.log('바디내용 확인', req.body);
-   if(req.body.tempPwd !== undefined ) {
+    console.log('바디내용 확인', req.body);
+    if(req.body.tempPwd !== undefined ) {
       await Users.findOne({
         where: { pwd: req.body.tempPwd }
       })
@@ -158,7 +158,7 @@ module.exports = {
       })
     }
     if(!isValidPwd(req.body.password1)) {
-      return res.status(501).json({ message: 'failed' });
+      return res.status(422).json({ message: 'incorrect information' });
     } else {
       let newSalt = crypto.randomBytes(64).toString('hex');
       let newPassword = crypto.pbkdf2Sync(req.body.password1, newSalt, 10000, 64, 'sha512').toString('base64');

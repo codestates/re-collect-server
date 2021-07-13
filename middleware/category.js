@@ -4,13 +4,17 @@ const { Category, sequelize } = require('../models');
 
 class CategoryMiddleware {
   static async getAll(userId) {
+    console.log(userId);
     // SELECT * FROM Categories WHERE userId = ?
     try {
       const categories = await Category.findAll({
-        where: { userId },
+        where: {
+          userId: userId
+        },
         attributes: ['id', 'title']
       });
       const result = categories.map((el) => el.dataValues);
+      console.log(result);
       return result;
     } catch(err) {
       throw err;
@@ -40,6 +44,29 @@ class CategoryMiddleware {
     }
   }
 
+  static async findOneBy(title, userId) {
+    try {
+      const result = await sequelize.transaction(async (t) => {
+        return await Category.findAll({
+          where: {
+            title,
+            userId
+          },
+          transaction: t,
+          attributes: ['title']
+        });
+      });
+      if(result.length === 0) {
+        return true;
+      } return false;
+    } catch(err) {
+      console.log("---------------------------------Error occurred in category Middleware---------------------------------",
+    err,
+    "---------------------------------Error occurred in category Middleware---------------------------------"
+    ); 
+    }
+  }
+
   static async update(userId, listId, title) {
     try {
       const result = await sequelize.transaction(async (t) => {
@@ -53,7 +80,7 @@ class CategoryMiddleware {
           transaction: t
         });
       });
-      console.log('업데이트 결과확인', result);
+      console.log('업데이트 결과확인', Boolean(result[0]));
       return Boolean(result[0]);
     } catch(err) {
       console.log("---------------------------------Error occurred in category Middleware---------------------------------",
@@ -74,8 +101,8 @@ class CategoryMiddleware {
           }
         });
       });
-      console.log('삭제확인', result);
-      return Boolean(result);
+      console.log('삭제확인', Boolean(result[0]));
+      return Boolean(result[0]);
     } catch (err) {
       console.log("---------------------------------Error occurred in category Middleware---------------------------------",
     err,

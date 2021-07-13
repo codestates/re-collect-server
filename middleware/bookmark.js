@@ -1,6 +1,7 @@
 "use strict";
 
-const { Bookmark , sequelize, db } = require('../models');
+const { Category, Bookmark , sequelize, db } = require('../models');
+
 
 class BookmarkMiddleware {
   static async findRecentPosition(userId) {
@@ -20,26 +21,55 @@ class BookmarkMiddleware {
       console.log("---------------------------------Error occurred in bookmark Middleware---------------------------------",
       err,
       "---------------------------------Error occurred in bookmark Middleware---------------------------------");
+      throw Error;
     }
   }
 
   static async findPositionById(id) {
     //sql = SELECT position FROM Bookmarks WHERE id=?
     try {
-      const result = await Bookmark.findOne({
-        attributes: ['position'],
-        where: {
-          id
-        }
+      console.log(id);
+      const result = await Bookmark.findAll({
+        where: { id },
+        attributes: ['position']
       });
       if( result === null ){
         return 0;
       }
-      return result.dataValues.position;
+      if( result.length !== 0 ){
+        return result[0].dataValues.position;
+      } 
     } catch(err) {
       console.log("---------------------------------Error occurred in bookmark Middleware---------------------------------",
       err,
       "---------------------------------Error occurred in bookmark Middleware---------------------------------");
+      throw Error;
+    }
+  }
+
+  static async findById(id) {
+    //sql = SELECT id FROM Bookmarks WHERE id=?
+    try {
+      console.log(id);
+      const result = await sequelize.transaction(async (t) => {
+        return await Bookmark.findAll({
+          where: {
+            id: id
+          },
+          transaction: t,
+          attributes: ['id']
+        });
+      });
+      if( result.length !== 0 ){
+        console.log(result[0].dataValues.id);
+        return (result[0].dataValues.id === id);
+      }
+      return false;
+    } catch(err) {
+      console.log("---------------------------------Error occurred in bookmark Middleware---------------------------------",
+      err,
+      "---------------------------------Error occurred in bookmark Middleware---------------------------------");
+      throw Error;
     }
   }
 
@@ -55,12 +85,41 @@ class BookmarkMiddleware {
       console.log("---------------------------------Error occurred in bookmark Middleware---------------------------------",
       err,
       "---------------------------------Error occurred in bookmark Middleware---------------------------------");
+      throw Error;
+    }
+  }
+
+  static async checkCategory(id, category){
+    try {
+      const result = await sequelize.transaction(async (t) => {
+        const categoryId =  await Bookmark.findAll({
+          where: { id },
+          transaction: t,
+          attributes: ['categoryId']
+        }).then((res) => res[0].dataValues.categoryId );
+        const categoryTitle = await Category.findAll({
+          where: { id: categoryId },
+          transaction: t,
+          attributes: ['title']
+        }).then((res) => res[0].dataValues.title );
+        console.log('입력된 카테고리명: ',category, ' 기존 카테고리 아이디: ',categoryId, '기존 카테고리명: ',categoryTitle);
+        if (category === categoryTitle ){
+          return { isDifferent:false, id:categoryId };
+        } else {
+          return { isDifferent:true, id: null };
+        }
+      });
+      return result;
+    } catch(err) {
+      console.log("---------------------------------Error occurred in bookmark Middleware---------------------------------",
+      err,
+      "---------------------------------Error occurred in bookmark Middleware---------------------------------");
+      throw Error;
     }
   }
 
   static async save(userId, categoryId, position, text, url, importance, color) {
     //sql = INSERT INTO Bookmarks (userId, categoryId, position, text, url, importance, color)
-    console.log('실행한 것을 확인합니다');
     try {
       const result = await sequelize.transaction(async (t) => {
         return await Bookmark.create({
@@ -73,19 +132,20 @@ class BookmarkMiddleware {
           color
         }, { transaction: t });
       });
-      console.log('저장확인', result);
-      return Boolean(result);
+      console.log('저장확인', Boolean(result[0]));
+      return Boolean(result[0]);
     } catch(err) {
       console.log("---------------------------------Error occurred in bookmark Middleware---------------------------------",
       err,
       "---------------------------------Error occurred in bookmark Middleware---------------------------------");
+      throw Error;
     }
   }
 
   static async update(id, text, url, importance, color) {
     //sql = UPDATE Bookmarks SET url=?, importance=?, color=?
     try {
-      const result = sequelize.transaction(async (t) => {
+      const result = await sequelize.transaction(async (t) => {
         return await Bookmark.update({
           text,
           url,
@@ -96,12 +156,55 @@ class BookmarkMiddleware {
           transaction: t
         });
       });
-      console.log('수정확인', result);
-      return Boolean(result);
+      console.log('수정확인', Boolean(result[0]));
+      return Boolean(result[0]);
     } catch(err) {
       console.log("---------------------------------Error occurred in bookmark Middleware---------------------------------",
       err,
       "---------------------------------Error occurred in bookmark Middleware---------------------------------");
+      throw Error;
+    }
+  }
+
+  static async updateAll(categoryId, id, text, url, importance, color) {
+    //sql = UPDATE Bookmarks SET url=?, importance=?, color=?
+    try {
+      const result = await sequelize.transaction(async (t) => {
+        return await Bookmark.update({
+          categoryId,
+          text,
+          url,
+          importance,
+          color
+        }, {
+          where: { id },
+          transaction: t
+        });
+      });
+      console.log('수정확인', Boolean(result[0]));
+      return Boolean(result[0]);
+    } catch(err) {
+      console.log("---------------------------------Error occurred in bookmark Middleware---------------------------------",
+      err,
+      "---------------------------------Error occurred in bookmark Middleware---------------------------------");
+      throw Error;
+    }
+  }
+
+  static async updateVisitCountsOf(id) {
+    //sql = UPDATE Bookmarks SET visitCounts=visitCounts+1 WHERE id=?
+    const sql = `UPDATE Bookmarks SET visitCounts=visitCounts+1 WHERE id=${id};`;
+    try {
+      const [results, metadata] = await sequelize.transaction(async (t) => {
+        return await sequelize.query(sql, { transaction: t });
+      });
+      console.log(`방문 횟수 증가`, Boolean(metadata.affectedRows));
+      return Boolean(metadata.affectedRows);
+  } catch(err) {
+    console.log("---------------------------------Error occurred in bookmark Middleware---------------------------------",
+      err,
+      "---------------------------------Error occurred in bookmark Middleware---------------------------------");
+      throw Error;
     }
   }
 
@@ -123,6 +226,7 @@ class BookmarkMiddleware {
       console.log("---------------------------------Error occurred in bookmark Middleware---------------------------------",
       err,
       "---------------------------------Error occurred in bookmark Middleware---------------------------------");
+      throw Error;
     }
   }
 
@@ -138,12 +242,13 @@ class BookmarkMiddleware {
           transaction: t
         });
       });
-      console.log('확인 작업', result);
-      return Boolean(result);
+      console.log('업데이트 성공 여부:  ', Boolean(result[0]));
+      return Boolean(result[0]);
     } catch(err) {
       console.log("---------------------------------Error occurred in bookmark Middleware---------------------------------",
       err,
       "---------------------------------Error occurred in bookmark Middleware---------------------------------");
+      throw Error;
     }
   }
 
@@ -161,7 +266,7 @@ class BookmarkMiddleware {
       console.log("---------------------------------Error occurred in bookmark Middleware---------------------------------",
       err,
       "---------------------------------Error occurred in bookmark Middleware---------------------------------");
-      return false;
+      throw Error;
     }
   }
 
@@ -174,11 +279,13 @@ class BookmarkMiddleware {
           transaction: t
         });
       });
-      return Boolean(result);
+      console.log('제거 확인: ', Boolean(result[0]));
+      return Boolean(result[0]);
     } catch(err) {
       console.log("---------------------------------Error occurred in bookmark Middleware---------------------------------",
       err,
       "---------------------------------Error occurred in bookmark Middleware---------------------------------");
+      throw Error;
     }
   }
 }

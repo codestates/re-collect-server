@@ -8,7 +8,14 @@ module.exports = {
     if(!accessTokenData) {
       return res.status(401).json({ message: "invalid access token"});
     } 
+    if( title === undefined || title === '' || id === undefined || id === '' ) {
+      return res.status(422).json({ message: 'incorrect information' });
+    }
     try {
+      const isNew = await CategoryMiddleware.findOneBy(title, accessTokenData.id);
+      if(!isNew) {
+        return res.status(422).json({ message: 'already exists' });
+      }
       const isUpdated = await CategoryMiddleware.update(accessTokenData.id, id, title);
       if(isUpdated) {
         return res.status(200).json({ message: 'ok '});

@@ -8,6 +8,8 @@ router.post('/', bookmarkctrl.create);
 router.put('/:id', bookmarkctrl.edit);
 //* DELETE /bookmarks/:id
 router.delete('/:id', bookmarkctrl.destroy);
+//* PATCH /bookmarks/:id
+router.patch('/:id', bookmarkctrl.updateVisitCounts);
 //* PATCH /bookmarks/:id/position
 router.patch('/:id/position', bookmarkctrl.updateOnePosition);
 //* PATCH /bookmarks/:dragId/:dropId/position

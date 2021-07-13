@@ -9,6 +9,9 @@ module.exports = {
     if(!accessTokenData) {
       return res.status(401).json({ message: 'invalid access token' });
     }
+    if( category === "" || category === null ) {
+      return res.status(422).json({ message: 'incorrect information' });
+    }
     try {
       await CategoryMiddleware.save(accessTokenData.id, category)
       .then(async(result) => {
@@ -27,18 +30,58 @@ module.exports = {
   },
   edit: async(req, res, next) => {
     const accessTokenData = TokenMiddleware.verifyToken(req);
-    const { color, importance, url, text } = req.body;
+    const { category, color, importance, url, text } = req.body;
     const id = req.params.id;
     if(!accessTokenData) {
       return res.status(401).json({ message: 'invalid access token' });
     }
     try{
-      const isEdited = await BookmarkMiddleware.update(id, text, url, importance, color);
-      if(isEdited) {
-        return res.status(200).json({ message: 'edited successfully '});
-      } 
+      const isExist = await BookmarkMiddleware.findById(id);
+      if(!isExist) {
+        return res.status(422).json({ message: 'incorrect information'})
+      }
+      const result = await BookmarkMiddleware.checkCategory(id, category);
+      console.log(result);
+      if(result['isDifferent']){
+        await CategoryMiddleware.save(accessTokenData.id, category)
+      .then(async(result) => {
+        const categoryId = result;
+        const isEdited = await BookmarkMiddleware.updateAll(categoryId, id, text, url, importance, color);
+        if(isEdited) {
+          return res.status(200).json({ message: 'edited successfully '});
+        } else {
+          return res.status(501).json({ message: 'failed' })
+        }
+      });
+      } else {
+        const isEdited = await BookmarkMiddleware.update(id, text, url, importance, color);
+        if(isEdited) {
+          return res.status(200).json({ message: 'edited successfully '});
+        } else {
+          return res.status(501).json({ message: 'failed' })
+        }
+      }
     } catch(err) {
-      return res.status(501).json({ message: 'failed' });
+      next(new Error('failed'));
+    }
+  },
+  updateVisitCounts: async(req, res, next) => {
+    const accessTokenData = TokenMiddleware.verifyToken(req);
+    const id = req.params.id;
+    if(!accessTokenData) {
+      return res.status(401).json({ message: 'invalid access token' });
+    }
+    try {
+      const isExist = await BookmarkMiddleware.findById(id);
+      if(!isExist) {
+        return res.status(422).json({ message: 'incorrect information'})
+      }
+      const isUpdated = await BookmarkMiddleware.updateVisitCountsOf(id);
+      if(isUpdated){
+        return res.status(200).json({ message: 'ok '});
+      }
+    } catch(err) {
+      next(new Error('failed'));
     }
   },
   updateOnePosition: async(req, res) => {
@@ -49,6 +92,10 @@ module.exports = {
       return res.status(401).json({ message: 'invalid access token' });
     } 
     try {
+      const isExist = await BookmarkMiddleware.findById(id);
+      if(!isExist) {
+        return res.status(422).json({ message: 'incorrect information'});
+      }
       let position = await BookmarkMiddleware.findRecentPosition(accessTokenData.id);
         position = position ? position + 1 : 1;
       const isUpdated = await BookmarkMiddleware.addOneToPosition(id, categoryId, position);
@@ -67,9 +114,21 @@ module.exports = {
       return res.status(401).json({ message: 'invalid access token' });
     } 
     try {
+      const isExist = await BookmarkMiddleware.findById(dragId);
+      console.log(isExist);
+      if(isExist) {
+        isExist = await BookmarkMiddleware.findById(dropId);
+        if(!isExist) {
+          return res.status(422).json({ message: 'incorrect information'});
+        }
+      } else {
+        return res.status(422).json({ message: 'incorrect information'});
+      }
       const position = await BookmarkMiddleware.findPositionById(dropId);
+      console.log(position);
       if( position ) {
         let isUpdated = await BookmarkMiddleware.addOnePositionBiggerThan(categoryId, position);
+        console.log(isUpdated);
         if(!isUpdated) {
           throw error;
         }
@@ -92,11 +151,16 @@ module.exports = {
       return res.status(401).json({ message: 'invalid access token' });
     }
     try {
+      const isExist = await BookmarkMiddleware.findById(id);
+      if(!isExist) {
+        return res.status(422).json({ message: 'incorrect information' });
+      }
       const isDeleted = await BookmarkMiddleware.delete(id);
-      console.log(isDeleted);
       if(isDeleted){
         return res.status(200).json({ message: 'deleted successfully' });
-      } 
+      } else {
+        throw Error;
+      }
     } catch(err) {
       next(new Error('failed'));
     }
