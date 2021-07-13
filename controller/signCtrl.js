@@ -1,6 +1,7 @@
 const TokenMiddleware = require('../middleware/token');
 const UserMiddleware = require('../middleware/user');
 const crypto = require('crypto');
+const { isValidPwd } = require('../utils/password');
 
 module.exports = {
   login: async(req, res, next) => {
@@ -9,6 +10,10 @@ module.exports = {
     if(accessTokenData) {
       return res.status(409).json({ message: 'already logged in' });
     }
+    const isUser = await UserMiddleware.checkUser(email);
+    if(!isUser) {
+      return res.status(401).json({ message: 'login failed' });
+    }
     if( pwd === undefined || email === undefined ) {
       return res.status(422).json({ message: 'incorrect information'});
     } else {
@@ -16,9 +21,9 @@ module.exports = {
       const dbPwd = userInfo.pwd;
       const dbSalt = userInfo.salt;
       let hashedPwd =  crypto.pbkdf2Sync(pwd, dbSalt, 10000, 64, 'sha512').toString('base64');
-      console.log('--------------------------------------compare hash-----------------------------------------------------------'
+      console.log('------------------------------------------------------------compare hash------------------------------------------------------------------------------------'
         ,hashedPwd);
-      console.log(dbPwd, '                     --------------------------------------------------------------------------------------------------------------');
+      console.log(dbPwd, '----------------------------------------');
       if( hashedPwd !== dbPwd ) {
         return res.status(401).json({ message: 'login failed' });
       } else {
@@ -28,13 +33,14 @@ module.exports = {
           const refreshToken = TokenMiddleware.generateAccessToken(user);
           const cookieOptions = {
             httpOnly: true,
+            domain: 'recollect.today',
             maxAge: 24 * 6 * 60 * 10000,
             secure: true,
             sameSite: 'none'
           }
           res.cookie('refreshToken', refreshToken, cookieOptions);
           res.setHeader('authorization', `Bearer ${accessToken}`);
-          return res.status(200).json({ message: 'login successfully '});
+          return res.status(200).json({ message: 'login successfully'});
         } catch(err) {
           console.error(err);
           next(new Error('failed'));
@@ -57,6 +63,10 @@ module.exports = {
   signup: async(req, res) => {
     const { pwd, email, username } = req.body;
     if( email === undefined || username === undefined || pwd === undefined ) {
+      return res.status(422).json({ message: 'incorrect information' });
+    }
+    console.log('비밀번호 보안검사', isValidPwd(pwd));
+    if(!isValidPwd(pwd)){
       return res.status(422).json({ message: 'incorrect information' });
     }
     const newSalt = crypto.randomBytes(64).toString('hex');

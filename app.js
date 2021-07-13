@@ -21,7 +21,7 @@ const redisClient = redis.createClient({
 
 dotenv.config();
 
-//* session 설정
+//* 세션 옵션 설정
 const sessionOption = {
   resave: false,
   saveUninitialized: false,
@@ -34,40 +34,25 @@ const sessionOption = {
   store: new RedisStore({ client: redisClient }),
 };
 
-if( process.env.NODE_ENV === 'production' ) {
-  console.log('배포환경 입니다.');
-  app.use(cors({
-  origin: true,
-  credentials: true,
-  methods: ['GET','HEAD','PUT','PATCH','POST','DELETE','OPTIONS'],
-  exposeHeaders: ['*','Authorization']
-  }));
-  app.enable('trust proxy');
-  app.use(morgan('combined'));
-  app.use(helmet({ contentSecurityPolicy: false }));
-  app.use(hpp());
-  app.disable("x-powered-by");
-  sessionOption.proxy = true;
-  sessionOption.cookie.secure = true;
-}
-
-app.use(cors({
-  origin: true,
-  credentials: true,
-  exposeHeaders: ['*','Authorization']
-}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); 
 app.use(cookieParser());
 app.use(morgan('dev'));
 app.use(session(sessionOption));
+app.use(cors({
+  origin: true,
+  credentials: true,
+  methods: ['GET','HEAD','PUT','PATCH','POST','DELETE','OPTIONS'],
+  exposeHeaders: ['*','Authorization']
+  }));
 
+//* 라우팅
 app.use('/',routes);
 app.get('/logout', signctrl.logout);
 app.post('/login', signctrl.login);
 app.post('/signup', signctrl.signup);
 
-	//* 예상치 못한 예외 처리
+//* 예상치 못한 예외 처리
 process.on('uncaughtException', function (err) {
 	console.log('uncaughtException 발생 : ' + err);
 });
@@ -77,5 +62,17 @@ app.use(function(err, req, res, next) {
   console.error('--------',err.message,'---------');
   res.status(500).send({ message: 'failed'});
 });
+
+//* 배포 환경 설정 
+if( process.env.NODE_ENV === 'production' ) {
+  console.log('배포환경 입니다.');
+  app.enable('trust proxy');
+  app.use(morgan('combined'));
+  app.use(helmet({ contentSecurityPolicy: false }));
+  app.use(hpp());
+  app.disable("x-powered-by");
+  sessionOption.proxy = true;
+  sessionOption.cookie.secure = true;
+}
 
 module.exports = app;

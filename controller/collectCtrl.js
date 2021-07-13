@@ -10,6 +10,7 @@ module.exports = {
       return res.status(401).json({ message: 'invalid access token' });
     } else {
       try {
+        console.log(accessTokenData);
         const categories = await CategoryMiddleware.getAll(accessTokenData.id);
         const bookmarks = await BookmarkMiddleware.getAll(accessTokenData.id);
 

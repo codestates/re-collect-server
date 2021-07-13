@@ -8,6 +8,7 @@ const refreshDecrypt = process.env.REFRESH_SECRET;
 
 class TokenMiddleware {
   static generateAccessToken(data) {
+    console.log('들어오는 데이터를 확인합니다', data);
     return jwt.sign( { id: data.id, email: data.email }, accessDecrypt, { expiresIn: '1h' });
   }
 
@@ -16,9 +17,9 @@ class TokenMiddleware {
   }
 
   static resendAccessToken(res, accessToken) {
-    res.setHeader('Authorization', `Bearer ${accessToken}`);
+    res.setHeader('authorization', `Bearer ${accessToken}`);
     res.status(200).send({
-      message: 'ok'
+      message: 'get refresh token successfully'
     });
   }
 

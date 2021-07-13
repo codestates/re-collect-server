@@ -24,7 +24,7 @@
     "nodemailer": "^6.6.2",
     "npm": "^7.19.1",
     "redis": "^3.1.2",
-    "sequelize": "^6.6.4",
+    "sequelize": "^6.6.5",
     "sequelize-auto": "^0.8.3",
     "sequelize-cli": "^6.2.0"
   },
