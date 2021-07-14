@@ -25,7 +25,7 @@ module.exports = {
           category.bookmarks.sort((a, b) => a.position - b.position );
           return category;
         });
-        res.status(200).json({ bookmarks ,reducebookmarks: mappingCategory, categories: onlyTitles })
+        res.status(200).json({ bookmarks ,reducedbookmarks: mappingCategory, category: onlyTitles })
       } catch(err) {
         next(new Error('failed'));
       }
