@@ -37,8 +37,9 @@ const sessionOption = {
 if( process.env.NODE_ENV === 'production' ) {
   console.log('배포환경 입니다.');
   app.enable('trust proxy');
-  app.use((res,res) => {
+  app.use((req,res,next) => {
     res.setHeader('X-Powered-By','');
+    next();
   });
   app.use(morgan('combined'));
   app.use(helmet({ contentSecurityPolicy: false }));
