@@ -122,18 +122,15 @@ module.exports = {
       return res.status(401).json({ message: 'invalid access token' });
     }
     try {
-      const isExist = await BookmarkMiddleware.findById(dragId);
-      console.log('존재하나요?', isExist);
-      if(isExist) {
-        isExist = await BookmarkMiddleware.findById(dropId);
-        if(!isExist) {
-          return res.status(422).json({ message: 'incorrect information'});
-        }
-      } //else {
-        //return res.status(422).json({ message: 'incorrect information'});
-      //}
+      const isDragExist = await BookmarkMiddleware.findById(dragId);
+      const isDropExist = await BookmarkMiddleware.findById(dropId);
+      console.log('drop된 북마크가 존재하나요?', isDropExist);
+      console.log('drag된 북마크가 존재하나요?', isDragExist);
+      if(!isDragExist || !isDropExist) {
+       return res.status(422).json({ message: 'incorrect information' });
+      }
       const position = await BookmarkMiddleware.findPositionById(dropId);
-      console.log(position);
+      console.log('drop된 북마크의 포지션을 확인합니다',position);
       if( position ) {
         let isUpdated = await BookmarkMiddleware.addOnePositionBiggerThan(categoryId, position);
         console.log(isUpdated);
@@ -164,6 +161,7 @@ module.exports = {
         return res.status(422).json({ message: 'incorrect information' });
       }
       const isDeleted = await BookmarkMiddleware.delete(id);
+      console.log('제거가 정말로 되었나요?', isDeleted);
       if(isDeleted){
         return res.status(200).json({ message: 'deleted successfully' });
       } else {

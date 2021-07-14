@@ -33,12 +33,13 @@ class BookmarkMiddleware {
         where: { id },
         attributes: ['position']
       });
+      console.log('결과확인', result);
       if( result === null ){
         return 0;
       }
       if( result.length !== 0 ){
         return result[0].dataValues.position;
-      } 
+      }
     } catch(err) {
       console.log("---------------------------------Error occurred in bookmark Middleware---------------------------------",
       err,
@@ -283,8 +284,8 @@ class BookmarkMiddleware {
           transaction: t
         });
       });
-      console.log('제거 확인: ', Boolean(result[0]));
-      return Boolean(result[0]);
+      console.log('제거 확인: ', Boolean(result));
+      return Boolean(result);
     } catch(err) {
       console.log("---------------------------------Error occurred in bookmark Middleware---------------------------------",
       err,
