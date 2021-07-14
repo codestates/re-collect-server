@@ -10,7 +10,7 @@ const redis = require('redis');
 const RedisStore = require('connect-redis')(session);
 const app = express();
 const routes = require('./routes/index');
-
+const signctrl = require('./controller/signCtrl');
 dotenv.config();
 
 const redisClient = redis.createClient({
@@ -37,7 +37,7 @@ const sessionOption = {
 if( process.env.NODE_ENV === 'production' ) {
   console.log('배포환경 입니다.');
   app.enable('trust proxy');
-  app.use((res,res) => {
+  app.use((req,res) => {
     res.setHeader('X-Powered-By','');
   });
   app.use(morgan('combined'));
@@ -62,6 +62,8 @@ app.use(cors({
 
 //* 라우팅
 app.use('/',routes);
+app.post('/login', signctrl.login);
+app.post('/signup', signctrl.signup);
 
 //* 예상치 못한 예외 처리
 process.on('uncaughtException', function (err) {

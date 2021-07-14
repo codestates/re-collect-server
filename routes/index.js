@@ -18,8 +18,8 @@ app.use('/bookmarks', require('./bookmark'));
 app.use('/auth', require('./auth'));
 
 
-app.get('/logout', signctrl.logout);
-app.post('/login', signctrl.login);
-app.post('/signup', signctrl.signup);
+// app.get('/logout', signctrl.logout);
+// app.post('/login', signctrl.login);
+// app.post('/signup', signctrl.signup);
 
 module.exports = app;
