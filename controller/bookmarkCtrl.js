@@ -29,18 +29,20 @@ module.exports = {
     }
   },
   edit: async(req, res, next) => {
+    console.log(req.headers['authorization']);
     const accessTokenData = TokenMiddleware.verifyToken(req);
     const { category, color, importance, url, text } = req.body;
     const id = req.params.id;
     if(!accessTokenData) {
       return res.status(401).json({ message: 'invalid access token' });
     }
-    if(!category) {
+    if(category === undefined) {
       console.log('--------------유저가 카테고리를 입력하지 않았습니다----------------');
       return res.status(422).json({ message: 'incorrect informaiton'});
     }
     try{
       const isExist = await BookmarkMiddleware.findById(id);
+      console.log(isExist);
       if(!isExist) {
         return res.status(422).json({ message: 'incorrect information'})
       }

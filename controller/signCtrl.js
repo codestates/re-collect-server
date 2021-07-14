@@ -52,6 +52,7 @@ module.exports = {
 
   logout: async(req, res, next) => {
     const accessTokenData = TokenMiddleware.verifyToken(req);
+    console.log('엑세스 토큰을 확인합니다',accessTokenData);
     if(!accessTokenData) {
       res.cookie('refreshToken', '');
       return res.status(401).json({ message: 'invalid access token' });
