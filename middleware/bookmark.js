@@ -60,11 +60,15 @@ class BookmarkMiddleware {
           attributes: ['id']
         });
       });
+      console.log('북마크 미들웨어에서 확인합니다',result);
       if( result.length !== 0 ){
-        console.log(result[0].dataValues.id);
-        return (result[0].dataValues.id === id);
+        console.log(result[0].dataValues.id == id);
+        if(result[0].dataValues.id == id) {
+         return true;
+        } else {
+        return false;
+       }
       }
-      return false;
     } catch(err) {
       console.log("---------------------------------Error occurred in bookmark Middleware---------------------------------",
       err,

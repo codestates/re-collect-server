@@ -43,7 +43,8 @@ class UserMiddleware {
       const result = await User.findOne({
         where: { email }
       });
-      if(result === null){
+      console.log('미들웨어에서 확인합니다', result);
+      if(result === null || result.length === 0){
         return false;
       } else {
         return(result.dataValues.email === email);
@@ -54,14 +55,14 @@ class UserMiddleware {
   }
   static async checkUsername(username) {
     try {
-      const result = await User.findOne({
-        attributes: ['username'],
-        where: { username: username }
+      const result = await User.findAll({
+        where: { username: username },
+        attributes: ['username']
       });
-      if(result === null ){
+      if(result === null || result.length ===0 ){
         return false;
       } else {
-        return (result.dataValues.username === username )
+        return (result[0].dataValues.username === username )
       }
     } catch(err) {
       console.log("---------------------------------Error occurred in User Middleware---------------------------------",

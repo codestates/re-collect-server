@@ -30,7 +30,7 @@ class CategoryMiddleware {
           defaults: {
           userId,
           title
-        }, 
+        },
         transaction: t
         });
       });
@@ -40,7 +40,7 @@ class CategoryMiddleware {
       console.log("---------------------------------Error occurred in category Middleware---------------------------------",
     err,
     "---------------------------------Error occurred in category Middleware---------------------------------"
-    ); 
+    );
     }
   }
 
@@ -63,7 +63,7 @@ class CategoryMiddleware {
       console.log("---------------------------------Error occurred in category Middleware---------------------------------",
     err,
     "---------------------------------Error occurred in category Middleware---------------------------------"
-    ); 
+    );
     }
   }
 
@@ -86,7 +86,7 @@ class CategoryMiddleware {
       console.log("---------------------------------Error occurred in category Middleware---------------------------------",
     err,
     "---------------------------------Error occurred in category Middleware---------------------------------"
-    ); 
+    );
     }
   }
 
@@ -107,7 +107,7 @@ class CategoryMiddleware {
       console.log("---------------------------------Error occurred in category Middleware---------------------------------",
     err,
     "---------------------------------Error occurred in category Middleware---------------------------------"
-    ); 
+    );
     }
   }
 }
