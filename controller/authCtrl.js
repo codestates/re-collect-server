@@ -80,7 +80,7 @@ module.exports = {
       const hashedPwd =  crypto.pbkdf2Sync(tempPwd, dbSalt, 10000, 64, 'sha512').toString('base64');
       console.log('--------------------------------------compare hash------------------------------------------------------------------------------------'
       ,hashedPwd);
-    console.log(dbPwd, '----------------------------------------');
+      console.log(dbPwd, '----------------------------------------');
       if( hashedPwd !== dbPwd ) {
         return res.status(401).json({ message : 'invalid temp password' });
       }
