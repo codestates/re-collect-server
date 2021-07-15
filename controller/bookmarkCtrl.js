@@ -116,6 +116,7 @@ module.exports = {
     }
   },
   updateAllPosition: async(req, res, next) => {
+    console.log('헤더를 확인합니다', req.headers['authorizaiton']);
     const accessTokenData = TokenMiddleware.verifyToken(req);
     const { categoryId } =  req.body;
     const { dragId, dropId } = req.params;
