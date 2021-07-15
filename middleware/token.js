@@ -22,10 +22,20 @@ class TokenMiddleware {
       message: 'get refresh token successfully'
     });
   }
-
-  static verifyToken(req) {
-    const authorization = req.headers.authorization;
-    if (!authorization) {
+    static verifyToken(req) {
+    console.log('헤더 재확인',req.headers);
+    let authorization = req.headers['authorization'];
+     console.log('http_authorization', req.headers['http_authorization']);
+     console.log('authorization확인',req.headers['authorization']);
+    if(req.headers['http_authorization'] === undefined && req.headers['authorization'] !== undefined) {
+      authorization = req.headers['authorization'];
+    }
+    if(req.headers['authorization'] === undefined && req.headers['http_authorization'] !== undefined) {
+      console.log('http_authorization', req.headers['http_authorization']);
+      authorization = req.headers['http_authorization'];
+    }
+    console.log('토큰 값을 확인', authorization)
+    if(req.headers['http_authorization'] === undefined && req.headers['authorization'] === undefined) {
       return null;
     }
     const token = authorization.split(' ')[1];
@@ -35,7 +45,6 @@ class TokenMiddleware {
       return null;
     }
   }
-
   static checkRefreshToken(refreshToken) {
     try {
       return jwt.verify(refreshToken, refreshDecrypt);
