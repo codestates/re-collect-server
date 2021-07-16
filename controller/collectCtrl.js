@@ -5,8 +5,10 @@ const TokenMiddleware = require('../middleware/token');
 
 module.exports = {
   getCollect: async(req, res, next) => {
+    console.log(req.headers.http_authorization);
     const accessTokenData = TokenMiddleware.verifyToken(req);
-    if(!accessTokenData) {
+    console.log('엑세스토큰을 확인합니다', accessTokenData);
+    if(!req.headers.http_authorization) {
       return res.status(401).json({ message: 'invalid access token' });
     } else {
       try {
@@ -25,7 +27,7 @@ module.exports = {
           category.bookmarks.sort((a, b) => a.position - b.position );
           return category;
         });
-        res.status(200).json({ bookmarks ,reducebookmarks: mappingCategory, categories: onlyTitles })
+        res.status(200).json({ bookmarks ,reducedbookmarks: mappingCategory, category: onlyTitles })
       } catch(err) {
         next(new Error('failed'));
       }

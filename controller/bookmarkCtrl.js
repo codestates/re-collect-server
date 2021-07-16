@@ -93,7 +93,6 @@ module.exports = {
     } 
     try {
       const isExist = await BookmarkMiddleware.findById(id);
-      console.log('존재하나요?', isExist);
       if(!isExist) {
         return res.status(422).json({ message: 'incorrect information'});
       }

@@ -11,6 +11,7 @@ module.exports = {
       return res.status(409).json({ message: 'already logged in' });
     }
     const isUser = await UserMiddleware.checkUser(email);
+    console.log('저희유저인가요?', isUser);
     if(!isUser) {
       return res.status(401).json({ message: 'login failed' });
     }
@@ -40,7 +41,7 @@ module.exports = {
           }
           res.cookie('refreshToken', refreshToken, cookieOptions);
           res.setHeader('authorization', `Bearer ${accessToken}`);
-          return res.status(200).json({ message: 'login successfully'});
+          return res.status(200).json({ accessToken, message: 'login successfully'});
         } catch(err) {
           console.error(err);
           next(new Error('failed'));
@@ -51,6 +52,7 @@ module.exports = {
 
   logout: async(req, res, next) => {
     const accessTokenData = TokenMiddleware.verifyToken(req);
+    console.log('엑세스 토큰을 확인합니다',accessTokenData);
     if(!accessTokenData) {
       res.cookie('refreshToken', '');
       return res.status(401).json({ message: 'invalid access token' });

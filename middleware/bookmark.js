@@ -61,8 +61,12 @@ class BookmarkMiddleware {
         });
       });
       if( result.length !== 0 ){
-        console.log(result[0].dataValues.id);
-        return (result[0].dataValues.id === id);
+        console.log(result[0].dataValues.id === id);
+        if(result[0].dataValues.id === id) {
+        return true;
+        } else {
+        return false;
+        }
       }
       return false;
     } catch(err) {

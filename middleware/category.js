@@ -30,7 +30,7 @@ class CategoryMiddleware {
           defaults: {
           userId,
           title
-        }, 
+        },
         transaction: t
         });
       });
@@ -40,7 +40,7 @@ class CategoryMiddleware {
       console.log("---------------------------------Error occurred in category Middleware---------------------------------",
     err,
     "---------------------------------Error occurred in category Middleware---------------------------------"
-    ); 
+    );
     }
   }
 
@@ -49,44 +49,41 @@ class CategoryMiddleware {
       const result = await sequelize.transaction(async (t) => {
         return await Category.findAll({
           where: {
-            title,
-            userId
+            title:title,
+            userId:userId
           },
           transaction: t,
           attributes: ['title']
         });
       });
-      if(result.length === 0) {
+      console.log(result);
+      if(result.length === 0 || result === null) {
         return true;
-      } return false;
+      } else {
+        return false;
+      }
     } catch(err) {
       console.log("---------------------------------Error occurred in category Middleware---------------------------------",
     err,
     "---------------------------------Error occurred in category Middleware---------------------------------"
-    ); 
+    );
     }
   }
 
-  static async update(userId, listId, title) {
+  static async update(userId, categoryId, title) {
     try {
+      const sql = `UPDATE Categories SET title = '${title}' WHERE userId = ${userId} AND id = ${categoryId};`;
       const result = await sequelize.transaction(async (t) => {
-        return await Category.update({
-          title
-        }, {
-          where: {
-            userId,
-            id: listId
-          },
-          transaction: t
-        });
+     	return await sequelize.query(sql, { transaction: t }); 
       });
-      console.log('업데이트 결과확인', Boolean(result[0]));
+      console.log('결과확인', result);
+      console.log('업데이트 결과확인', Boolean(result));
       return Boolean(result[0]);
     } catch(err) {
       console.log("---------------------------------Error occurred in category Middleware---------------------------------",
     err,
     "---------------------------------Error occurred in category Middleware---------------------------------"
-    ); 
+    );
     }
   }
 
@@ -107,7 +104,7 @@ class CategoryMiddleware {
       console.log("---------------------------------Error occurred in category Middleware---------------------------------",
     err,
     "---------------------------------Error occurred in category Middleware---------------------------------"
-    ); 
+    );
     }
   }
 }
