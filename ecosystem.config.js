@@ -5,8 +5,6 @@ module.exports = {
     env_production: {
       NODE_ENV: 'production'
     },
-    instances: 2,
-    exec_mode: 'cluster',
     watch: true,
     env_development: {
       NODE_ENV: 'development'
