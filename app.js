@@ -38,17 +38,17 @@ if( process.env.NODE_ENV === 'production' ) {
   console.log('배포환경 입니다.');
   app.enable('trust proxy');
   app.use((req,res,next) => {
-    res.setHeader('X-Powered-By','');
+    res.removeHeader("X-Powered-By");
     next();
   });
   app.use(morgan('combined'));
   app.use(helmet({ contentSecurityPolicy: false }));
   app.use(hpp());
-  app.disable("x-powered-by");
+  app.disable('x-powered-by');
   sessionOption.proxy = true;
   sessionOption.cookie.secure = true;
 }
-
+app.use(helmet.hidePoweredBy())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); 
 app.use(cookieParser());
