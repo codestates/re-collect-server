@@ -23,13 +23,13 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-cron.schedule('00 9 * * 5', async() => {
-  const templateStr = fs.readFileSync(path.resolve('./view', 'alert-template.html')).toString('utf8');
+cron.schedule('20 20 * * 6', async() => {
+  const templateStr = fs.readFileSync(path.resolve('./view', 'notification-template.html')).toString('utf8');
   const users = await User.findAll({
     attributes:['id', 'username', 'email']
   }).then((result) => result.map((user) => user.dataValues));
   console.log(users);
-  const sql = `SELECT COUNT(id) AS count , text, url, userId FROM Bookmarks WHERE visitCounts = 0 AND NOW() - createdAt >= 7 GROUP BY userId;`;
+  const sql = `SELECT COUNT(id) AS count, userId FROM Bookmarks WHERE visitCounts = 0 AND NOW() - createdAt >= 7 GROUP BY userId;`;
   const results = await sequelize.query(sql);
   console.log(results);
   let lists = results[0].map((el) => {
@@ -41,39 +41,46 @@ cron.schedule('00 9 * * 5', async() => {
     }
     return el;
   });
-  for(let i = 0; i < lists.length; i++) {
+  try {
+    for(let i = 0; i < lists.length; i++) {
     let template = handlebars.compile(templateStr, { noEscape: true });
-    let data = { link: '', username:'', count:'', text:''};
-    data.link = lists[i].url;
+    let data = { username:'', count:'', email: '' };
     data.username = lists[i].username;
     data.count = lists[i].count;
-    data.text = lists[i].text;
     let htmlToSend = template(data);
     console.log('-----------확인------------------');
     let message = {
       from: process.env.GMAIL_USER,
       to: lists[i].email,
-      subject:'고객님에게 읽지 않은 북마크들이 존재합니다',
+      subject:'Recollect에 아직 읽지 않은 북마크가 있습니다',
       html: htmlToSend,
     }
-    console.log('-----------확인------------------');
-    try {
-      transporter.sendMail(message, (err, info) => {
-        if(err) {
-          console.error(err);
-          throw Error;
-        } else {
-          console.log('-------------------알림 메일을 전송하였습니다------------------', info);
-        }
-      });
-    } catch(err) {
-      next(new Error('failed'));
-    }
+    transporter.sendMail(message, (err, info) => {
+      if(err) {
+        console.error(err);
+        throw Error;
+      } else {
+        console.log('-------------------알림 메일을 전송하였습니다------------------', info);
+      }
+    });
+  } 
+} catch(err) {
+  next(new Error('failed'));
   }
 });
 
 app.listen(4000, () => {
   console.log('cron 작업을 위한 포트 4000번 실행 중 입니다.');
+});
+
+//* SIGTERM && SIGINT 처리
+process.on('SIGINT', (err,req,res,next) => {
+  process.exit(err ? 1 : 0);
+});
+
+//* 예상치 못한 예외 처리
+process.on('uncaughtException', function (err) {
+	console.log('uncaughtException 발생 : ' + err);
 });
 
 module.exports = app;

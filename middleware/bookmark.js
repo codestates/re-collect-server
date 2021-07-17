@@ -38,7 +38,7 @@ class BookmarkMiddleware {
       }
       if( result.length !== 0 ){
         return result[0].dataValues.position;
-      } 
+      }
     } catch(err) {
       console.log("---------------------------------Error occurred in bookmark Middleware---------------------------------",
       err,
@@ -61,14 +61,12 @@ class BookmarkMiddleware {
         });
       });
       if( result.length !== 0 ){
-        console.log(result[0].dataValues.id === id);
-        if(result[0].dataValues.id === id) {
+        if(result[0].dataValues.id == id) {
         return true;
         } else {
         return false;
         }
       }
-      return false;
     } catch(err) {
       console.log("---------------------------------Error occurred in bookmark Middleware---------------------------------",
       err,
