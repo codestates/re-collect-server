@@ -114,14 +114,9 @@ module.exports = {
       return res.status(401).json({ message: 'invalid access token' });
     } 
     try {
-      const isExist = await BookmarkMiddleware.findById(dragId);
-      console.log(isExist);
-      if(isExist) {
-        isExist = await BookmarkMiddleware.findById(dropId);
-        if(!isExist) {
-          return res.status(422).json({ message: 'incorrect information'});
-        }
-      } else {
+      const isDragExist = await BookmarkMiddleware.findById(dragId);
+      const isDropExist = await BookmarkMiddleware.findById(dropId);
+      if(!isDragExist || !isDropExist){
         return res.status(422).json({ message: 'incorrect information'});
       }
       const position = await BookmarkMiddleware.findPositionById(dropId);
