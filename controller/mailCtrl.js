@@ -72,7 +72,7 @@ cron.schedule('00 9 * * 5', async() => {
   }
 });
 
-app.listen(3000, () => {
+app.listen(4000, () => {
   console.log('cron 작업을 위한 포트 4000번 실행 중 입니다.');
 });
 
