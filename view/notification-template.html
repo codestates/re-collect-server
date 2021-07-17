@@ -6,7 +6,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<meta name="description" content="Password Reset" />
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<title>Password Reset</title>
+		<title>notification</title>
 		<style>
 			html,
 			body {
@@ -213,65 +213,30 @@
 										</td>
 									</tr>			
 									<tr>
-										<td height="40" style="height:40px">
-											<img 
-												src="https://moiseshp.github.io/email-templates-for-developers/storage/transparent.png" 
-												width="1" 
-												height="1" 
-												border="0" 
-												style="display: block; border: none" 
-											/>		
-										</td>
-									</tr>
-									<tr>
 										<td>
-											<h1 
-												style="font-family: Arial, Helvetica, sans-serif; 
-													font-size: 24px; 
-													color: #010E28; 
-													font-weight: bold; 
-													margin: 0; 
-													margin-bottom: 5px;
-													padding: 0"
-											>
-												Recollect에서 인증번호를 알려드립니다
-											</h1>
-											<p
-                        id="password"
-												style="font-family: Arial, Helvetica, sans-serif; 
-													font-size: 25px; 
-													color: #010E28;  
-													margin: 0; 
-													padding: 0"
-											>인증번호: {{ password }} </p>
-											</p>
-										</td>
-									</tr>
-									<tr>
-										<td height="15" style="height: 15px">
-											<img 
-												src="https://moiseshp.github.io/email-templates-for-developers/storage/transparent.png" 
-												width="1" 
-												height="1" 
-												border="0" 
-												style="display: block; border: none" 
-											/>	
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<p 
-                        style="font-family: Arial, Helvetica, sans-serif; 
-													font-size: 15px; 
-													color: #5B6987; 
-													margin: 0; 
-													padding: 0; 
-													line-height: 20px;"
-                        >
-											</p>
-										</td>
-									</tr>
-									<tr>
+                        <h1 style="font-family: Nanum Gothic;
+                            font-weight: bold;
+                            font-size: 23px;
+                            color: #010E28; 
+                            margin: 10;
+                            padding: 0;
+                            text-align: center;">{{count}}개의 안읽은 북마크를 확인하세요</h1>
+                      </td>
+                </tr>
+                <tr>
+                  <td>
+                    <p style="
+                    font-family: Nanum Gothic;
+                    font-size: 15px;
+                    color:  #010E28; 
+                    margin: 0;
+                    padding: 0;
+                    line-height: 20px;
+                    text-align: center;"> 
+                    <strong style="font-size: 20px;">안녕하세요 {{username}} 회원님</strong><br>Recollect에 읽지 않은 북마크가 있습니다.<br>
+                  </p>
+                  </td>
+								<tr>
 										<td height="45" style="height: 45px">
 											<img 
 												src="https://moiseshp.github.io/email-templates-for-developers/storage/transparent.png" 
@@ -281,8 +246,8 @@
 												style="display: block; border: none" 
 											/>
 										</td>
-									</tr>
-									<tr>
+								</tr>
+								<tr>
 										<td align="center">
 											<table 
 												role="presentation"
@@ -321,7 +286,7 @@
 													>
 														<a
                               id="link"
-                              href=https://recollect.today/auth/pwd?email={{email}}
+                              href=https://recollect.today
 															style="font-family: Arial, Helvetica, sans-serif;
 																width: 100%; 
 																background-color: #0248FF; 
@@ -336,7 +301,7 @@
 																text-decoration: none;
 																cursor: pointer;"
 														>
-															비밀번호 변경
+															확인하기
 														</a>
 													</td>
 													<td width="70" style="width: 70px">
@@ -362,51 +327,34 @@
 													padding: 0; 
 													line-height: 20px;"
 											>
-                      버튼을 누르면 비밀번호 변경 링크로 이동됩니다. 
+                      버튼을 누르면 Recollect 페이지로 이동됩니다. 
 											</p>
 										</td>
 									</tr>
 									<tr>
-										<td height="30" style="height: 30px">
-											<img 
-												src="https://moiseshp.github.io/email-templates-for-developers/storage/transparent.png" 
-												width="1" 
-												height="1" 
-												border="0" 
-												style="display: block; border: none" 
-											/>	
-										</td>
+                    <td height="40" style="height: 40px;">
+                      <img src="https://moiseshp.github.io/email-templates-for-developers/storage/transparent.png" width="1" height="1" border="0" style="display: block; border: none">	
+                    </td>
 									</tr>
-									<tr>
-										<td>
-											<p 
-												style="font-family: Arial, Helvetica, sans-serif; 
-													font-size: 12px; 
-													color: #5B6987; 
-													margin: 0; 
-													padding: 0; 
-													line-height: 20px; 
-													text-align: left;"
-											> 
-                      
-											</p>
-										</td>
-									</tr>
-									<tr>
-										<td height="10" style="height: 10px">
-											<img 
-												src="https://moiseshp.github.io/email-templates-for-developers/storage/transparent.png" 
-												width="1" 
-												height="1" 
-												border="0" 
-												style="display: block; border: none" 
-											/>	
-										</td>
-									</tr>
+                  <tr>
+                    <td>
+                          <p style="font-family: Arial, Helvetica;
+                          font-size: 12px;
+                          color: #5B6987;
+                          margin: 0;
+                          padding: 0;
+                          line-height: 20px;
+                          text-align: center;">https://www.recollect.today</p>
+                            <p style="font-family: Arial, Helvetica;
+                          font-size: 12px;
+                          color: #5B6987;
+                          margin: 0;
+                          padding: 0;
+                          line-height: 20px;
+                          text-align: center;">Copyright © 2021 Recollect, Inc.</p>
+                    </td>
+                  </tr>	
 								</table>	
-								<!-- 
-									| END / content container 
-								-->
 							</td>
 						</tr>
 						<tr>
@@ -421,14 +369,8 @@
 							</td>
 						</tr>
 					</table>	
-					<!-- 
-						| END / email wrapper
-					-->
-
-					<!-- 
-						| footer legals
-					-->
-					<table 
+        </table>
+				<table
 						role="presentation"
 						align="center" 
 						valign="top" 
@@ -489,11 +431,6 @@
 								</table>
 							</td>
 						</tr>
-					</table>
-					<!-- 
-						| END / footer legals
-					-->
-
 				</td>
 			</tr>
 			<tr>
@@ -508,9 +445,5 @@
 				</td>
 			</tr>
 		</table>
-		<!-- 
-			| END / email container
-		-->
-
   </body>
 </html>

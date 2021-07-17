@@ -68,7 +68,6 @@ class BookmarkMiddleware {
         return false;
         }
       }
-      return false;
     } catch(err) {
       console.log("---------------------------------Error occurred in bookmark Middleware---------------------------------",
       err,
