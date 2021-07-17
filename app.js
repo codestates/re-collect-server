@@ -71,12 +71,12 @@ process.on('SIGINT', (err,req,res,next) => {
 });
 
 //* 예상치 못한 예외 처리
-process.on('uncaughtException', function (err) {
+process.on('uncaughtException', (err,req,res,next) => {
 	console.log('uncaughtException 발생 : ' + err);
 });
 
-//* 에러 처리 미들웨어 
-app.use(function(err, req, res, next) {
+//* 에러 처리 미들웨어
+app.use((err, req, res, next) => {
   console.error('--------',err.message,'---------');
   res.status(500).send({ message: 'failed'});
 });
