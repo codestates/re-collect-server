@@ -13,6 +13,7 @@ module.exports = {
     name: 'cron',
     script: './controller/mailCtrl.js',
     env_production: {
+      PORT: 4000,
       NODE_ENV: 'production'
     },
     instances: 1,
