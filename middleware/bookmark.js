@@ -33,6 +33,7 @@ class BookmarkMiddleware {
         where: { id },
         attributes: ['position']
       });
+      console.log(result[0]);
       if( result === null ){
         return 0;
       }
