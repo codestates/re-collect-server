@@ -41,7 +41,6 @@ cron.schedule('00 9 * * 5', async() => {
     }
     return el;
   });
-  console.log('결과물 확인', lists);
   for(let i = 0; i < lists.length; i++) {
     let template = handlebars.compile(templateStr, { noEscape: true });
     let data = { link: '', username:'', count:'', text:''};
@@ -49,7 +48,6 @@ cron.schedule('00 9 * * 5', async() => {
     data.username = lists[i].username;
     data.count = lists[i].count;
     data.text = lists[i].text;
-    console.log(data);
     let htmlToSend = template(data);
     console.log('-----------확인------------------');
     let message = {

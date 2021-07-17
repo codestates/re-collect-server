@@ -70,7 +70,6 @@ module.exports = {
   },
   resetPwd: async(req, res, next) => {
     const { tempPwd, pwd } = req.body;
-    console
     const email  = req.query.email;
     if(!isValidPwd(pwd)){
       return res.status(422).json({ message: 'incorrect information' });
