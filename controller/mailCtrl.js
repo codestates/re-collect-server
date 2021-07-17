@@ -23,7 +23,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-cron.schedule('39 16 * * 5', async() => {
+cron.schedule('00 9 * * 5', async() => {
   const templateStr = fs.readFileSync(path.resolve('./view', 'alert-template.html')).toString('utf8');
   const users = await User.findAll({
     attributes:['id', 'username', 'email']

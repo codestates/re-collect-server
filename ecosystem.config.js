@@ -5,6 +5,9 @@ module.exports = {
     env_production: {
       NODE_ENV: 'production'
     },
+    instances: 2,
+    exec_mode: 'cluster',
+    watch: true,
     env_development: {
       NODE_ENV: 'development'
     }
@@ -14,7 +17,7 @@ module.exports = {
     env_production: {
       NODE_ENV: 'production'
     },
-    instance: 1,
+    instances: 1,
     exec_mode: 'fork',
     watch: true,
     cron_restart: "0,30 * * * *",
