@@ -67,6 +67,11 @@ app.use('/',routes);
 app.post('/login', signctrl.login);
 app.post('/signup', signctrl.signup);
 
+//* SIGTERM && SIGINT 처리
+process.on('SIGINT', () => {
+  process.exit(err ? 1 : 0);
+});
+
 //* 예상치 못한 예외 처리
 process.on('uncaughtException', function (err) {
 	console.log('uncaughtException 발생 : ' + err);
@@ -77,6 +82,5 @@ app.use(function(err, req, res, next) {
   console.error('--------',err.message,'---------');
   res.status(500).send({ message: 'failed'});
 });
-
 
 module.exports = app;
