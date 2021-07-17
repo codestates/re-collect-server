@@ -16,7 +16,7 @@ module.exports = {
       console.log(accessTokenData.id);
       const isNew = await CategoryMiddleware.findOneBy(title, accessTokenData.id);
       console.log('새로운 타이틀입니까?', isNew);
-      if(!isNew) {
+      if(isNew) {
         return res.status(422).json({ message: 'already exists' });
       }
       const isUpdated = await CategoryMiddleware.update(accessTokenData.id, id, title);

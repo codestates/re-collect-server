@@ -56,8 +56,11 @@ class CategoryMiddleware {
           attributes: ['title']
         });
       });
-      console.log(result);
+      console.log(result[0].dataValues.title === title);
       if(result.length === 0 || result === null) {
+        return true;
+      }
+      if(result[0].dataValues.title === title) {
         return true;
       } else {
         return false;
@@ -74,11 +77,15 @@ class CategoryMiddleware {
     try {
       const sql = `UPDATE Categories SET title = '${title}' WHERE userId = ${userId} AND id = ${categoryId};`;
       const result = await sequelize.transaction(async (t) => {
-     	return await sequelize.query(sql, { transaction: t }); 
+        return await sequelize.query(sql, { transaction: t }); 
       });
       console.log('결과확인', result);
       console.log('업데이트 결과확인', Boolean(result));
-      return Boolean(result[0]);
+      if(result[0].affectedRows === 1) {
+        return true;
+      } else {
+        return false;
+      }
     } catch(err) {
       console.log("---------------------------------Error occurred in category Middleware---------------------------------",
     err,
@@ -98,8 +105,9 @@ class CategoryMiddleware {
           }
         });
       });
-      console.log('삭제확인', Boolean(result[0]));
-      return Boolean(result[0]);
+      console.log(result);
+      console.log('삭제확인', Boolean(result));
+      return Boolean(result);
     } catch (err) {
       console.log("---------------------------------Error occurred in category Middleware---------------------------------",
     err,
