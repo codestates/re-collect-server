@@ -18,8 +18,6 @@ const redisClient = redis.createClient({
   password: process.env.REDIS_PASSWORD,
 });
 
-dotenv.config();
-
 //* 세션 옵션 설정
 const sessionOption = {
   resave: false,
