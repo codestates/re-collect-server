@@ -25,8 +25,8 @@ class TokenMiddleware {
     static verifyToken(req) {
     console.log('헤더 재확인',req.headers);
     let authorization = req.headers['authorization'];
-     console.log('http_authorization', req.headers['http_authorization']);
-     console.log('authorization확인',req.headers['authorization']);
+    console.log('http_authorization', req.headers['http_authorization']);
+    console.log('authorization확인',req.headers['authorization']);
     if(req.headers['http_authorization'] === undefined && req.headers['authorization'] !== undefined) {
       authorization = req.headers['authorization'];
     }

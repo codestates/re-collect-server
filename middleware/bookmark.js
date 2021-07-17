@@ -33,13 +33,12 @@ class BookmarkMiddleware {
         where: { id },
         attributes: ['position']
       });
-      console.log('결과확인', result);
       if( result === null ){
         return 0;
       }
       if( result.length !== 0 ){
         return result[0].dataValues.position;
-      }
+      } 
     } catch(err) {
       console.log("---------------------------------Error occurred in bookmark Middleware---------------------------------",
       err,
@@ -61,15 +60,15 @@ class BookmarkMiddleware {
           attributes: ['id']
         });
       });
-      console.log('북마크 미들웨어에서 확인합니다',result);
       if( result.length !== 0 ){
-        console.log(result[0].dataValues.id == id);
-        if(result[0].dataValues.id == id) {
-         return true;
+        console.log(result[0].dataValues.id === id);
+        if(result[0].dataValues.id === id) {
+        return true;
         } else {
         return false;
-       }
+        }
       }
+      return false;
     } catch(err) {
       console.log("---------------------------------Error occurred in bookmark Middleware---------------------------------",
       err,
@@ -284,8 +283,8 @@ class BookmarkMiddleware {
           transaction: t
         });
       });
-      console.log('제거 확인: ', Boolean(result));
-      return Boolean(result);
+      console.log('제거 확인: ', Boolean(result[0]));
+      return Boolean(result[0]);
     } catch(err) {
       console.log("---------------------------------Error occurred in bookmark Middleware---------------------------------",
       err,

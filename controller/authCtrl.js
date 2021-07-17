@@ -3,12 +3,18 @@ const UserMiddleware = require('../middleware/user');
 const nodemailer = require('nodemailer');
 const { isValidPwd, makeRandomPwd } = require('../utils/password');
 const crypto = require('crypto');
+const handlebars = require('handlebars');
+const fs = require('fs');
+const path = require('path');
 
 
 module.exports = {
   sendMail: async(req, res, next) => {
     const { email } = req.body;
     const isOurUser = await UserMiddleware.checkUser(email);
+    const templateStr = fs.readFileSync(path.resolve('./view', 'reset-template.html')).toString('utf8')
+    const template = handlebars.compile(templateStr, { noEscape: true })
+
     console.log('유저가 맞나요?',isOurUser);
     if(!isOurUser) {
       return res.status(401).json({ message: 'not our user' });
@@ -31,41 +37,36 @@ module.exports = {
     const randomPassword = makeRandomPwd(6);
     const newSalt = crypto.randomBytes(64).toString('hex');
     const newPassword = crypto.pbkdf2Sync(randomPassword, newSalt, 10000, 64, 'sha512').toString('base64');
+    
+    let data = {
+      email: req.body.email,
+      password: randomPassword
+    }
+
+    const htmlToSend = template(data);
 
     const message = {
       from: process.env.GMAIL_USER,
       to: req.body.email,
       subject:'Recollect에서 알려드립니다',
-      html: `
-      <h1>
-      Recollect에서 인증번호를 알려드립니다.
-      </h1>
-      <hr />
-      <br />
-      <h2> 인증번호 : ${randomPassword} </h2>
-      <hr />
-      <h3 style="color: crimson;">링크를 누르면 인증번호를 입력하여, 비밀번호를 새롭게 변경하실 수 있습니다.</h3>
-      <br />
-      <a href=https://recollect.today/auth/pwd?email=${req.body.email}> 새로운 비밀번호 변경</a>
-      `
+      html: htmlToSend,
     }
+
     try {
-      const isUpdated = await UserMiddleware.updatePwdAndSalt(email, newPassword, newSalt);
-      if(isUpdated) {
+        const isUpdated = await UserMiddleware.updatePwdAndSalt(email, newPassword, newSalt);
+        if(isUpdated) {
         return  transporter.sendMail(message, (err, info) => {
           if(err) {
-            next(new Error(err));
-          } else {
-            console.log('이메일을 전송하였습니다:  ',info);
+              new(new Error(err));
+            } else {
+              console.log('-----이메일을 전송하였습니다------', info);
+              return res.status(200).json({ message: 'ok' });
+            }
+          });
           }
-          return res.status(200).json({ status: 'ok '});
-        });
-      } else {
-        throw error;
+        } catch(err) {
+        next(new Error('failed'));
       }
-    } catch(err) {
-      next(new Error('failed'));
-    }
   },
   resetPwd: async(req, res, next) => {
     const { tempPwd, pwd } = req.body;
@@ -81,7 +82,7 @@ module.exports = {
       const hashedPwd =  crypto.pbkdf2Sync(tempPwd, dbSalt, 10000, 64, 'sha512').toString('base64');
       console.log('--------------------------------------compare hash------------------------------------------------------------------------------------'
       ,hashedPwd);
-    console.log(dbPwd, '----------------------------------------');
+      console.log(dbPwd, '----------------------------------------');
       if( hashedPwd !== dbPwd ) {
         return res.status(401).json({ message : 'invalid temp password' });
       }
@@ -96,8 +97,8 @@ module.exports = {
   },
   checkUsername: async(req, res, next) => {
     const { username } = req.body;
-     console.log('바디 값을 확인합니다',username);
-     if(!username) {
+    console.log('바디 값을 확인합니다',username);
+    if(!username) {
       return res.status(422).json({ message: 'incorrect information' });
     }
     try {

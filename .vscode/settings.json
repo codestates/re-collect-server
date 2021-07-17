@@ -11,7 +11,12 @@
     "TINYINT",
     "UXBZWVO",
     "YIARAAGAQS",
+    "aligncenter",
+    "alignleft",
+    "alignright",
     "authctrl",
+    "authorizaiton",
+    "autorestart",
     "bookmarkctrl",
     "categoryctrl",
     "cgoiymbyuvsg",
@@ -22,6 +27,9 @@
     "gitrepo",
     "googleusercontent",
     "honghwa",
+    "itemscope",
+    "itemtype",
+    "lspace",
     "mdlinpnou",
     "mhetf",
     "printf",
@@ -29,10 +37,12 @@
     "qnpk",
     "redislabs",
     "reducebookmarks",
+    "reducedbookmarks",
     "refreshtoken",
     "resave",
     "resetpwd",
     "sendmail",
-    "signctrl"
+    "signctrl",
+    "webmail"
   ]
 }

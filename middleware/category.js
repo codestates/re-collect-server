@@ -77,14 +77,14 @@ class CategoryMiddleware {
     try {
       const sql = `UPDATE Categories SET title = '${title}' WHERE userId = ${userId} AND id = ${categoryId};`;
       const result = await sequelize.transaction(async (t) => {
-     	return await sequelize.query(sql, { transaction: t }); 
+        return await sequelize.query(sql, { transaction: t }); 
       });
       console.log('결과확인', result);
       console.log('업데이트 결과확인', Boolean(result));
       if(result[0].affectedRows === 1) {
         return true;
       } else {
-  	return false;
+        return false;
       }
     } catch(err) {
       console.log("---------------------------------Error occurred in category Middleware---------------------------------",

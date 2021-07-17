@@ -1,12 +1,27 @@
 module.exports = {
   apps : [{
-    name   : "app1",
+    name   : "server",
     script : "./bin/app.js",
     env_production: {
-     NODE_ENV: 'production'
-   },
-   env_development: {
-    NODE_ENV: 'development'
-  }
+      NODE_ENV: 'production'
+    },
+    instances: 2,
+    exec_mode: 'cluster',
+    watch: true,
+    env_development: {
+      NODE_ENV: 'development'
+    }
+  },{
+    name: 'cron',
+    script: './controller/mailCtrl.js',
+    env_production: {
+      NODE_ENV: 'production'
+    },
+    instances: 1,
+    exec_mode: 'fork',
+    watch: true,
+    cron_restart: "0,30 * * * *",
+    autorestart: false,
   }]
 }
+

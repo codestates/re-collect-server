@@ -10,7 +10,7 @@ const redis = require('redis');
 const RedisStore = require('connect-redis')(session);
 const app = express();
 const routes = require('./routes/index');
-
+const signctrl = require('./controller/signCtrl');
 dotenv.config();
 
 const redisClient = redis.createClient({
@@ -32,6 +32,19 @@ const sessionOption = {
   },
   store: new RedisStore({ client: redisClient }),
 };
+app.use(helmet.hidePoweredBy())
+app.use(express.json());
+app.use(express.urlencoded({ extended: true })); 
+app.use(cookieParser());
+app.use(morgan('dev'));
+app.use(session(sessionOption));
+app.use(cors({
+  origin: true,
+  credentials: true,
+  methods: ['GET','HEAD','PUT','PATCH','POST','DELETE','OPTIONS'],
+  exposeHeaders: ['*','Authorization']
+  }));
+app.use(session(sessionOption));
 
 //* 배포 환경 설정 
 if( process.env.NODE_ENV === 'production' ) {
@@ -48,21 +61,11 @@ if( process.env.NODE_ENV === 'production' ) {
   sessionOption.proxy = true;
   sessionOption.cookie.secure = true;
 }
-app.use(helmet.hidePoweredBy())
-app.use(express.json());
-app.use(express.urlencoded({ extended: true })); 
-app.use(cookieParser());
-app.use(morgan('dev'));
-app.use(session(sessionOption));
-app.use(cors({
-  origin: true,
-  credentials: true,
-  methods: ['GET','HEAD','PUT','PATCH','POST','DELETE','OPTIONS'],
-  exposeHeaders: ['*','Authorization']
-  }));
 
 //* 라우팅
 app.use('/',routes);
+app.post('/login', signctrl.login);
+app.post('/signup', signctrl.signup);
 
 //* 예상치 못한 예외 처리
 process.on('uncaughtException', function (err) {
