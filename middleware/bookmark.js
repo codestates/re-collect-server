@@ -282,8 +282,9 @@ class BookmarkMiddleware {
           transaction: t
         });
       });
-      console.log('제거 확인: ', Boolean(result[0]));
-      return Boolean(result[0]);
+      console.log(result);
+      console.log('제거 확인: ', Boolean(result));
+      return Boolean(result);
     } catch(err) {
       console.log("---------------------------------Error occurred in bookmark Middleware---------------------------------",
       err,
