@@ -5,11 +5,10 @@ require("dotenv").config();
 const jwt = require('jsonwebtoken');
 const accessDecrypt = process.env.ACCESS_SECRET;
 const refreshDecrypt = process.env.REFRESH_SECRET;
-
 class TokenMiddleware {
   static generateAccessToken(data) {
     console.log('들어오는 데이터를 확인합니다', data);
-    return jwt.sign( { id: data.id, email: data.email }, accessDecrypt, { expiresIn: '1h' });
+    return jwt.sign( { id: data.id, email: data.email }, accessDecrypt, { expiresIn: '60s' });
   }
 
   static generateRefreshToken(data) {
@@ -46,12 +45,15 @@ class TokenMiddleware {
     }
   }
   static checkRefreshToken(refreshToken) {
-    try {
-      return jwt.verify(refreshToken, refreshDecrypt);
-    } catch {
-      return null;
-    }
-  }
+   console.log('미들웨어에서 확인',refreshToken);
+    jwt.verify(refreshToken, process.env.REFRESH_SECRET, (err, decoded) => {
+      if (err) {
+      console.log(err);
+    } else {
+     return jwt.verify(refreshToken, process.env.REFRESH_SECRET);
+  };
+ });
+}
 }
 
 module.exports = TokenMiddleware;

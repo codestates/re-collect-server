@@ -37,7 +37,7 @@ module.exports = {
     const randomPassword = makeRandomPwd(6);
     const newSalt = crypto.randomBytes(64).toString('hex');
     const newPassword = crypto.pbkdf2Sync(randomPassword, newSalt, 10000, 64, 'sha512').toString('base64');
-    
+
     let data = {
       email: req.body.email,
       password: randomPassword
@@ -129,6 +129,7 @@ module.exports = {
     }
   },
   renewToken: async(req, res, next) => {
+    console.log(req.cookies);
     const refreshTokenData = TokenMiddleware.checkRefreshToken(req.cookies.refreshToken);
     console.log('리프레쉬토큰을 확인합니다',refreshTokenData);
     if(!refreshTokenData) {
@@ -141,7 +142,8 @@ module.exports = {
       }
       const accessToken = TokenMiddleware.generateAccessToken(user);
       return TokenMiddleware.resendAccessToken(res, accessToken);
-    } catch {
+    } catch(err) {
+      console.log(err);
       next(new Error('failed'));
     }
   }
