@@ -71,7 +71,7 @@ https://recollect.today/
 
 ## 🗒 Wiki
 https://github.com/codestates/re-collect-client/wiki
-## ⚙️ Server repository
-https://github.com/codestates/re-collect-server
+## ⚙️ Client repository
+https://github.com/codestates/re-collect-client
 
 
