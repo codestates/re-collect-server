@@ -6,7 +6,7 @@ const crypto = require('crypto');
 const handlebars = require('handlebars');
 const fs = require('fs');
 const path = require('path');
-const jwt = require('jsonwebtoken');
+
 
 module.exports = {
   sendMail: async(req, res, next) => {
