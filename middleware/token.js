@@ -47,7 +47,7 @@ class TokenMiddleware {
   }
   static checkRefreshToken(refreshToken) {
     try {
-     return jwt.decode(refreshToken);
+    return jwt.decode(refreshToken);
     } catch {
       return null;
     }
