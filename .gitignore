@@ -1,6 +1,3 @@
-<<<<<<< HEAD
 node_modules
-=======
 .env
-node_modules
->>>>>>> 09f7e24f0684990c779f57d2ab18f904bbb0c406
+ecosystem.config.js
