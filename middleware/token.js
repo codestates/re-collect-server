@@ -7,12 +7,11 @@ const accessDecrypt = process.env.ACCESS_SECRET;
 const refreshDecrypt = process.env.REFRESH_SECRET;
 class TokenMiddleware {
   static generateAccessToken(data) {
-    console.log('들어오는 데이터를 확인합니다', data);
-    return jwt.sign( { id: data.id, email: data.email }, accessDecrypt, { expiresIn: '60s' });
+    return jwt.sign( { id: data.id, email: data.email }, accessDecrypt, { expiresIn: '30m' });
   }
 
   static generateRefreshToken(data) {
-    return jwt.sign( { id: data.id, email: data.email } , refreshDecrypt, { expiresIn: '14d' });
+    return jwt.sign( { id: data.id, email: data.email }, refreshDecrypt, { expiresIn: '14d' });
   }
 
   static resendAccessToken(res, accessToken) {
@@ -21,7 +20,8 @@ class TokenMiddleware {
       message: 'get refresh token successfully'
     });
   }
-    static verifyToken(req) {
+
+  static verifyToken(req) {
     console.log('헤더 재확인',req.headers);
     let authorization = req.headers['authorization'];
     console.log('http_authorization', req.headers['http_authorization']);
@@ -45,15 +45,13 @@ class TokenMiddleware {
     }
   }
   static checkRefreshToken(refreshToken) {
-   console.log('미들웨어에서 확인',refreshToken);
-    jwt.verify(refreshToken, process.env.REFRESH_SECRET, (err, decoded) => {
-      if (err) {
-      console.log(err);
-    } else {
-     return jwt.verify(refreshToken, process.env.REFRESH_SECRET);
-  };
- });
-}
+    try {
+    return jwt.decode(refreshToken);
+    } catch {
+      return null;
+    }
+  }
+  
 }
 
 module.exports = TokenMiddleware;
