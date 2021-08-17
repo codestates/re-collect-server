@@ -129,6 +129,7 @@ module.exports = {
     }
   },
   renewToken: async(req, res, next) => {
+    console.log(req.cookies);
     const refreshTokenData = TokenMiddleware.checkRefreshToken(req.cookies.refreshToken);
     if(!refreshTokenData) {
       return res.status(401).send('invalid refresh token');

@@ -5,7 +5,6 @@ require("dotenv").config();
 const jwt = require('jsonwebtoken');
 const accessDecrypt = process.env.ACCESS_SECRET;
 const refreshDecrypt = process.env.REFRESH_SECRET;
-
 class TokenMiddleware {
   static generateAccessToken(data) {
     return jwt.sign( { id: data.id, email: data.email }, accessDecrypt, { expiresIn: '30m' });
@@ -52,6 +51,7 @@ class TokenMiddleware {
       return null;
     }
   }
+  
 }
 
 module.exports = TokenMiddleware;
