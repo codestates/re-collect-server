@@ -11,7 +11,7 @@ class TokenMiddleware {
   }
 
   static generateRefreshToken(data) {
-    return jwt.sign( { id: data.id, email: data.email } , refreshDecrypt, { expiresIn: '14d' });
+    return jwt.sign( { id: data.id, email: data.email }, refreshDecrypt, { expiresIn: '14d' });
   }
 
   static resendAccessToken(res, accessToken) {
@@ -20,7 +20,8 @@ class TokenMiddleware {
       message: 'get refresh token successfully'
     });
   }
-    static verifyToken(req) {
+
+  static verifyToken(req) {
     console.log('헤더 재확인',req.headers);
     let authorization = req.headers['authorization'];
     console.log('http_authorization', req.headers['http_authorization']);

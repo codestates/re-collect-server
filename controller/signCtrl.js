@@ -41,7 +41,7 @@ module.exports = {
           }
           res.cookie('refreshToken', refreshToken, cookieOptions);
           res.setHeader('authorization', `Bearer ${accessToken}`);
-          return res.status(200).json({ accessToken, message: 'login successfully'});
+          return res.status(200).json({ accessToken ,message: 'login successfully'});
         } catch(err) {
           console.error(err);
           next(new Error('failed'));

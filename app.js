@@ -65,7 +65,7 @@ app.use('/',routes);
 app.post('/login', signctrl.login);
 app.post('/signup', signctrl.signup);
 
-//* SIGTERM && SIGINT 처리
+//* SIGTERM, SIGINT 처리
 process.on('SIGINT', (err,req,res,next) => {
   process.exit(err ? 1 : 0);
 });

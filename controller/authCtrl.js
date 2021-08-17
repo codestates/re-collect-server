@@ -131,7 +131,6 @@ module.exports = {
   renewToken: async(req, res, next) => {
     console.log(req.cookies);
     const refreshTokenData = TokenMiddleware.checkRefreshToken(req.cookies.refreshToken);
-    console.log('리프레쉬토큰을 확인합니다',refreshTokenData);
     if(!refreshTokenData) {
       return res.status(401).send('invalid refresh token');
     }
