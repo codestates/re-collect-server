@@ -7,7 +7,7 @@ const accessDecrypt = process.env.ACCESS_SECRET;
 const refreshDecrypt = process.env.REFRESH_SECRET;
 class TokenMiddleware {
   static generateAccessToken(data) {
-    return jwt.sign( { id: data.id, email: data.email }, accessDecrypt, { expiresIn: '30m' });
+    return jwt.sign( { id: data.id, email: data.email }, accessDecrypt, { expiresIn: '60s' });
   }
 
   static generateRefreshToken(data) {
@@ -45,13 +45,14 @@ class TokenMiddleware {
     }
   }
   static checkRefreshToken(refreshToken) {
-    try {
-    return jwt.decode(refreshToken);
-    } catch {
-      return null;
-    }
-  }
-  
+    jwt.verify(refreshToken, process.env.REFRESH_SECRET, (err, decoded) => {
+      if (err) {
+      console.log(err);
+    } else {
+      return jwt.verify(refreshToken, process.env.REFRESH_SECRET);
+  };
+});
+}
 }
 
 module.exports = TokenMiddleware;
