@@ -1,5 +1,5 @@
 
-# re-collect-Server
+# re-collect-client
 <img src="https://img.shields.io/badge/PROJECT-RECOLLECT-blue?style=for-the-badge" >
 
 ## 📝 Recollect
@@ -218,6 +218,17 @@ https://recollect.today/
 
 ## 🗒 Wiki
 https://github.com/codestates/re-collect-client/wiki
+
+## ⚙️ Client repository
+https://github.com/codestates/re-collect-client
+=======
+## ⚙️ Server repository
+https://github.com/codestates/re-collect-server
+
+## 더 자세한 내용은 아래 링크에서 확인
+https://codestates.notion.site/9-Collector-Recollect-3fcb48a9a7a8422a8c615619382851b3
+>>>>>>> 203a600570b4779e650d91defbf2729066a15b5c
+=======
 ## ⚙️ Server repository
 https://github.com/codestates/re-collect-server
 
@@ -252,27 +263,6 @@ https://github.com/codestates/re-collect-server
 https://recollect.today/
 
 ## 🛠 사용한 기술 스택
-<!-- ### 프론트
-
-<img src="https://img.shields.io/badge/FRONT-HTML5-orange?style=for-the-badge&logo=html5" >
-<img src="https://img.shields.io/badge/FRONT-SCSS-pink?style=for-the-badge&logo=sass" ><img src="https://img.shields.io/badge/FRONT-JAVASCRIPT-yellow?style=for-the-badge&logo=javascript" > <img src="https://img.shields.io/badge/FRONT-REACTHOOKS-skyblue?style=for-the-badge&logo=react" >
-<img src="https://img.shields.io/badge/FRONT-REACTROUTER-skyblue?style=for-the-badge&logo=react" >
-<img src="https://img.shields.io/badge/FRONT-REDUX-blueviolet?style=for-the-badge&logo=redux" >
-<img src="https://img.shields.io/badge/FRONT-AXIOS-lightgrey?style=for-the-badge&logo=axios" >
-
-
-### 백
-
-<img src="https://img.shields.io/badge/BACK-NODE.JS-teal?style=for-the-badge&logo=nodedotjs" > 
-<img src="https://img.shields.io/badge/BACK-EXPRESS-white?style=for-the-badge" >
-<img src="https://img.shields.io/badge/BACK-SEQUELIZE-skyblue?style=for-the-badge&logo=sequelize" >
-<img src="https://img.shields.io/badge/BACK-Mysql-orange?style=for-the-badge&logo=mysql" >
-<img src="https://img.shields.io/badge/BACK-JWT-black?style=for-the-badge&logo=jwt" >
-
-### 배포 -->
-
-
-
 <img width="727" alt="기술스택_recollect" src="https://user-images.githubusercontent.com/54028005/126042945-6b6185b0-3181-423f-806b-8dc64ef62c4e.png">
 
 ## 🏛 Architecture
@@ -295,3 +285,4 @@ https://recollect.today/
 https://github.com/codestates/re-collect-client/wiki
 ## ⚙️ Client repository
 https://github.com/codestates/re-collect-client
+

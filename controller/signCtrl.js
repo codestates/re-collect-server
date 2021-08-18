@@ -34,10 +34,10 @@ module.exports = {
           const refreshToken = TokenMiddleware.generateAccessToken(user);
           const cookieOptions = {
             httpOnly: true,
-            domain: 'recollect.today',
+            domain: 'localhost:3000',
             maxAge: 24 * 6 * 60 * 10000,
             secure: true,
-            sameSite: 'none'
+            sameSite: 'none',
           }
           res.cookie('refreshToken', refreshToken, cookieOptions);
           res.setHeader('authorization', `Bearer ${accessToken}`);
