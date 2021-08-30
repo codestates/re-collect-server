@@ -222,13 +222,9 @@ https://github.com/codestates/re-collect-client/wiki
 ## ⚙️ Client repository
 https://github.com/codestates/re-collect-client
 
-## ⚙️ Server repository
-https://github.com/codestates/re-collect-server
-
 ## 더 자세한 내용은 아래 링크에서 확인
 https://www.notion.so/4-4-037ac8da43f146239cd97be61359a64a
 
-## ⚙️ Server repository
-https://github.com/codestates/re-collect-server
+
 
 
